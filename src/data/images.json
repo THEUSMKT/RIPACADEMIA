@@ -1,0 +1,550 @@
+{
+  "photos": {
+    "corredor-central": {
+      "id": "corredor-central",
+      "source": "imagens-tratadas/ambiente/04-corredor-central.png",
+      "width": 853,
+      "height": 1260,
+      "variants": {
+        "avif": [
+          {
+            "w": 480,
+            "file": "assets/images/corredor-central-480.avif"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/corredor-central-720.avif"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/corredor-central-853.avif"
+          }
+        ],
+        "webp": [
+          {
+            "w": 480,
+            "file": "assets/images/corredor-central-480.webp"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/corredor-central-720.webp"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/corredor-central-853.webp"
+          }
+        ]
+      }
+    },
+    "visao-geral-entrada": {
+      "id": "visao-geral-entrada",
+      "source": "imagens-tratadas/ambiente/03-visao-geral-entrada.png",
+      "width": 853,
+      "height": 1400,
+      "variants": {
+        "avif": [
+          {
+            "w": 480,
+            "file": "assets/images/visao-geral-entrada-480.avif"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/visao-geral-entrada-720.avif"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/visao-geral-entrada-853.avif"
+          }
+        ],
+        "webp": [
+          {
+            "w": 480,
+            "file": "assets/images/visao-geral-entrada-480.webp"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/visao-geral-entrada-720.webp"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/visao-geral-entrada-853.webp"
+          }
+        ]
+      }
+    },
+    "escada-e-aparelhos": {
+      "id": "escada-e-aparelhos",
+      "source": "imagens-tratadas/ambiente/05-escada-e-aparelhos.png",
+      "width": 853,
+      "height": 1844,
+      "variants": {
+        "avif": [
+          {
+            "w": 480,
+            "file": "assets/images/escada-e-aparelhos-480.avif"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/escada-e-aparelhos-720.avif"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/escada-e-aparelhos-853.avif"
+          }
+        ],
+        "webp": [
+          {
+            "w": 480,
+            "file": "assets/images/escada-e-aparelhos-480.webp"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/escada-e-aparelhos-720.webp"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/escada-e-aparelhos-853.webp"
+          }
+        ]
+      }
+    },
+    "aluno-aparelho-vermelho": {
+      "id": "aluno-aparelho-vermelho",
+      "source": "imagens-tratadas/treinos/09-aluno-no-aparelho-vermelho.png",
+      "width": 853,
+      "height": 1480,
+      "variants": {
+        "avif": [
+          {
+            "w": 480,
+            "file": "assets/images/aluno-aparelho-vermelho-480.avif"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/aluno-aparelho-vermelho-720.avif"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/aluno-aparelho-vermelho-853.avif"
+          }
+        ],
+        "webp": [
+          {
+            "w": 480,
+            "file": "assets/images/aluno-aparelho-vermelho-480.webp"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/aluno-aparelho-vermelho-720.webp"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/aluno-aparelho-vermelho-853.webp"
+          }
+        ]
+      }
+    },
+    "exercicios-no-chao": {
+      "id": "exercicios-no-chao",
+      "source": "imagens-tratadas/funcional/19-exercicios-no-chao.png",
+      "width": 853,
+      "height": 1420,
+      "variants": {
+        "avif": [
+          {
+            "w": 480,
+            "file": "assets/images/exercicios-no-chao-480.avif"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/exercicios-no-chao-720.avif"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/exercicios-no-chao-853.avif"
+          }
+        ],
+        "webp": [
+          {
+            "w": 480,
+            "file": "assets/images/exercicios-no-chao-480.webp"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/exercicios-no-chao-720.webp"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/exercicios-no-chao-853.webp"
+          }
+        ]
+      }
+    },
+    "aperto-de-maos": {
+      "id": "aperto-de-maos",
+      "source": "imagens-tratadas/conexao/22-aperto-de-maos.png",
+      "width": 853,
+      "height": 1400,
+      "variants": {
+        "avif": [
+          {
+            "w": 480,
+            "file": "assets/images/aperto-de-maos-480.avif"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/aperto-de-maos-720.avif"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/aperto-de-maos-853.avif"
+          }
+        ],
+        "webp": [
+          {
+            "w": 480,
+            "file": "assets/images/aperto-de-maos-480.webp"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/aperto-de-maos-720.webp"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/aperto-de-maos-853.webp"
+          }
+        ]
+      }
+    },
+    "foto-de-grupo": {
+      "id": "foto-de-grupo",
+      "source": "imagens-tratadas/equipe/06-foto-de-grupo.png",
+      "width": 941,
+      "height": 1300,
+      "variants": {
+        "avif": [
+          {
+            "w": 480,
+            "file": "assets/images/foto-de-grupo-480.avif"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/foto-de-grupo-720.avif"
+          },
+          {
+            "w": 941,
+            "file": "assets/images/foto-de-grupo-941.avif"
+          }
+        ],
+        "webp": [
+          {
+            "w": 480,
+            "file": "assets/images/foto-de-grupo-480.webp"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/foto-de-grupo-720.webp"
+          },
+          {
+            "w": 941,
+            "file": "assets/images/foto-de-grupo-941.webp"
+          }
+        ]
+      }
+    },
+    "acompanhamento-no-aparelho": {
+      "id": "acompanhamento-no-aparelho",
+      "source": "imagens-tratadas/treinos/07-acompanhamento-no-aparelho.png",
+      "width": 853,
+      "height": 1500,
+      "variants": {
+        "avif": [
+          {
+            "w": 480,
+            "file": "assets/images/acompanhamento-no-aparelho-480.avif"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/acompanhamento-no-aparelho-720.avif"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/acompanhamento-no-aparelho-853.avif"
+          }
+        ],
+        "webp": [
+          {
+            "w": 480,
+            "file": "assets/images/acompanhamento-no-aparelho-480.webp"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/acompanhamento-no-aparelho-720.webp"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/acompanhamento-no-aparelho-853.webp"
+          }
+        ]
+      }
+    },
+    "fachada-vista-da-rua": {
+      "id": "fachada-vista-da-rua",
+      "source": "imagens-tratadas/fachada/01-fachada-vista-da-rua.png",
+      "width": 1054,
+      "height": 1000,
+      "variants": {
+        "avif": [
+          {
+            "w": 480,
+            "file": "assets/images/fachada-vista-da-rua-480.avif"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/fachada-vista-da-rua-720.avif"
+          },
+          {
+            "w": 1054,
+            "file": "assets/images/fachada-vista-da-rua-1054.avif"
+          }
+        ],
+        "webp": [
+          {
+            "w": 480,
+            "file": "assets/images/fachada-vista-da-rua-480.webp"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/fachada-vista-da-rua-720.webp"
+          },
+          {
+            "w": 1054,
+            "file": "assets/images/fachada-vista-da-rua-1054.webp"
+          }
+        ]
+      }
+    },
+    "fachada-vista-aerea": {
+      "id": "fachada-vista-aerea",
+      "source": "imagens-tratadas/fachada/02-fachada-vista-aerea.png",
+      "width": 1135,
+      "height": 1386,
+      "variants": {
+        "avif": [
+          {
+            "w": 480,
+            "file": "assets/images/fachada-vista-aerea-480.avif"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/fachada-vista-aerea-720.avif"
+          },
+          {
+            "w": 1135,
+            "file": "assets/images/fachada-vista-aerea-1135.avif"
+          }
+        ],
+        "webp": [
+          {
+            "w": 480,
+            "file": "assets/images/fachada-vista-aerea-480.webp"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/fachada-vista-aerea-720.webp"
+          },
+          {
+            "w": 1135,
+            "file": "assets/images/fachada-vista-aerea-1135.webp"
+          }
+        ]
+      }
+    },
+    "colocacao-de-anilha": {
+      "id": "colocacao-de-anilha",
+      "source": "imagens-tratadas/treinos/12-colocacao-de-anilha.png",
+      "width": 853,
+      "height": 1844,
+      "variants": {
+        "avif": [
+          {
+            "w": 480,
+            "file": "assets/images/colocacao-de-anilha-480.avif"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/colocacao-de-anilha-720.avif"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/colocacao-de-anilha-853.avif"
+          }
+        ],
+        "webp": [
+          {
+            "w": 480,
+            "file": "assets/images/colocacao-de-anilha-480.webp"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/colocacao-de-anilha-720.webp"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/colocacao-de-anilha-853.webp"
+          }
+        ]
+      }
+    },
+    "toque-de-punhos": {
+      "id": "toque-de-punhos",
+      "source": "imagens-tratadas/conexao/21-toque-de-punhos.png",
+      "width": 941,
+      "height": 1672,
+      "variants": {
+        "avif": [
+          {
+            "w": 480,
+            "file": "assets/images/toque-de-punhos-480.avif"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/toque-de-punhos-720.avif"
+          },
+          {
+            "w": 941,
+            "file": "assets/images/toque-de-punhos-941.avif"
+          }
+        ],
+        "webp": [
+          {
+            "w": 480,
+            "file": "assets/images/toque-de-punhos-480.webp"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/toque-de-punhos-720.webp"
+          },
+          {
+            "w": 941,
+            "file": "assets/images/toque-de-punhos-941.webp"
+          }
+        ]
+      }
+    },
+    "aluno-na-esteira": {
+      "id": "aluno-na-esteira",
+      "source": "imagens-tratadas/treinos/08-aluno-na-esteira.png",
+      "width": 853,
+      "height": 1844,
+      "variants": {
+        "avif": [
+          {
+            "w": 480,
+            "file": "assets/images/aluno-na-esteira-480.avif"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/aluno-na-esteira-720.avif"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/aluno-na-esteira-853.avif"
+          }
+        ],
+        "webp": [
+          {
+            "w": 480,
+            "file": "assets/images/aluno-na-esteira-480.webp"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/aluno-na-esteira-720.webp"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/aluno-na-esteira-853.webp"
+          }
+        ]
+      }
+    },
+    "aparelho-inclinado-pegada": {
+      "id": "aparelho-inclinado-pegada",
+      "source": "imagens-tratadas/treinos/11-aparelho-inclinado-pegada.png",
+      "width": 853,
+      "height": 1844,
+      "variants": {
+        "avif": [
+          {
+            "w": 480,
+            "file": "assets/images/aparelho-inclinado-pegada-480.avif"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/aparelho-inclinado-pegada-720.avif"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/aparelho-inclinado-pegada-853.avif"
+          }
+        ],
+        "webp": [
+          {
+            "w": 480,
+            "file": "assets/images/aparelho-inclinado-pegada-480.webp"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/aparelho-inclinado-pegada-720.webp"
+          },
+          {
+            "w": 853,
+            "file": "assets/images/aparelho-inclinado-pegada-853.webp"
+          }
+        ]
+      }
+    },
+    "treino-integrado": {
+      "id": "treino-integrado",
+      "source": "imagens-tratadas/funcional/17-treino-integrado.png",
+      "width": 928,
+      "height": 1694,
+      "variants": {
+        "avif": [
+          {
+            "w": 480,
+            "file": "assets/images/treino-integrado-480.avif"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/treino-integrado-720.avif"
+          },
+          {
+            "w": 928,
+            "file": "assets/images/treino-integrado-928.avif"
+          }
+        ],
+        "webp": [
+          {
+            "w": 480,
+            "file": "assets/images/treino-integrado-480.webp"
+          },
+          {
+            "w": 720,
+            "file": "assets/images/treino-integrado-720.webp"
+          },
+          {
+            "w": 928,
+            "file": "assets/images/treino-integrado-928.webp"
+          }
+        ]
+      }
+    }
+  },
+  "brand": {
+    "logo": {
+      "width": 790,
+      "height": 360
+    }
+  }
+}

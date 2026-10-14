@@ -1,0 +1,42 @@
+/* Paleta da interface (interpretação para o site; as cores da logo vêm do arquivo original). */
+:root {
+  --background: #09090b;
+  --surface: #151518;
+  --surface-elevated: #202024;
+  --brand-red: #f20a16; /* detalhes, grandes títulos e grafismos — não usar sob texto branco pequeno */
+  --action-red: #d90d18; /* botões com texto branco (≈5,2:1) */
+  --action-hover: #b90a14;
+  --text: #fafaf7;
+  --muted: #a6a6af;
+  --light-section: #f3f2ef;
+  --ink: #17171a;
+  --ink-muted: #4a4a52;
+  --line: rgb(255 255 255 / 0.1);
+  --line-strong: rgb(255 255 255 / 0.18);
+
+  --font-display: 'Barlow Condensed', 'Arial Narrow', 'Roboto Condensed', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+
+  --container: 1240px;
+  --gutter: clamp(20px, 4vw, 40px);
+  --section-y: clamp(56px, 9vw, 112px);
+  --header-h: 72px;
+  --mobile-bar-h: 0px;
+  --consent-h: 0px;
+
+  --radius: 6px;
+  --radius-lg: 10px;
+  --shadow: 0 18px 40px -18px rgb(0 0 0 / 0.7);
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* Motivo da logo: corte diagonal em um canto das molduras de foto. */
+  --cut: clamp(18px, 3vw, 34px);
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --header-h: 64px;
+    /* Barra persistente de conversão (altura + área segura) */
+    --mobile-bar-h: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+}
