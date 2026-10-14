@@ -1,4 +1,4 @@
-// Compara a home com Ribbon Glow habilitado x desabilitado (reduced-motion), mesmo navegador e máquina.
+// Compara a home com o arco Predictive Arc 2 animado x parado (reduced-motion), mesmo navegador e máquina.
 // Mede LCP, CLS, long tasks, desenhos WebGL por segundo, intervalos entre frames e latência de clique.
 import { chromium } from 'playwright-core';
 // Navegador local (Chromium/Edge/Chrome). Ex.: BROWSER_PATH="/usr/bin/google-chrome" node tests/e2e/interact.mjs
@@ -13,7 +13,7 @@ const init = () => {
   new PerformanceObserver((l) => l.getEntries().forEach((e) => (window.__perf.lcp = e.startTime))).observe({ type: 'largest-contentful-paint', buffered: true });
   new PerformanceObserver((l) => l.getEntries().forEach((e) => { if (!e.hadRecentInput) window.__perf.cls += e.value; })).observe({ type: 'layout-shift', buffered: true });
   new PerformanceObserver((l) => l.getEntries().forEach((e) => window.__perf.long.push(Math.round(e.duration)))).observe({ type: 'longtask', buffered: true });
-  const p = WebGL2RenderingContext.prototype;
+  const p = WebGLRenderingContext.prototype;
   const d = p.drawArrays;
   p.drawArrays = function (...a) { window.__perf.draws++; return d.apply(this, a); };
 };
@@ -46,7 +46,7 @@ async function run(label, reducedMotion) {
       cls: +perf.cls.toFixed(4),
       longTasks: perf.long.length,
       longMax: perf.long.length ? Math.max(...perf.long) : 0,
-      drawsPerSec: Math.round((d1 - d0) / 3 / 2), // 2 drawArrays por quadro (campo + acabamento)
+      drawsPerSec: Math.round((d1 - d0) / 3), // 1 drawArrays por quadro
       frameP50: +gaps[Math.floor(gaps.length * 0.5)].toFixed(1),
       frameP95: +gaps[Math.floor(gaps.length * 0.95)].toFixed(1),
       clickToPaint: +click.toFixed(1),
@@ -56,6 +56,6 @@ async function run(label, reducedMotion) {
   console.log(`\n${label}`);
   console.table(rows);
 }
-await run('Ribbon Glow HABILITADO (desktop 1440, Edge, GPU local)', 'no-preference');
-await run('Ribbon Glow DESABILITADO (prefers-reduced-motion)', 'reduce');
+await run('Arco ANIMADO (desktop 1440)', 'no-preference');
+await run('Arco PARADO (prefers-reduced-motion: um quadro só)', 'reduce');
 await browser.close();

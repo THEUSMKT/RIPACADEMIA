@@ -4,7 +4,7 @@ Landing page da **RIP Academia** (Av. Feitoria, 3740 — Feitoria, São Leopoldo
 
 - **Stack:** Astro 7 (TypeScript, geração estática), CSS por componente e scripts nativos. React não entra no projeto.
 - **Publicação:** GitHub Pages em `https://theusmkt.github.io/RIPACADEMIA/`
-- **Material de origem:** `RipAcademia-Base-ClaudeCode/` (prompt, catálogo, fotos tratadas, logo, referências) e `RipAcademia-Edicoes-ClaudeCode/` (pacote de edições: prompt, oito imagens aprovadas e as artes de benefícios com o endereço corrigido). Nada dessas pastas é publicado.
+- **Material de origem:** `RipAcademia-Base-ClaudeCode/` (prompt, catálogo, fotos tratadas, logo, referências), `RipAcademia-Edicoes-ClaudeCode/` (primeira rodada de edições: prompt, oito imagens aprovadas e as artes de benefícios com o endereço corrigido) e `RipAcademia-Ajustes-Rodada-2/` (segunda rodada: prompt e o código do Predictive Arc 2; as fotos dessa rodada já estavam no repositório). Nada dessas pastas é publicado.
 
 ## Executar
 
@@ -64,60 +64,59 @@ Para pedidos de edição prontos, use os modelos em `RipAcademia-Base-ClaudeCode
 
 O processamento completo leva alguns minutos por causa do AVIF. Para refazer só uma foto, use `node scripts/build-images.mjs --only=fachada-rip` (ou `--only=brand`). As variantes geradas ficam versionadas, então o deploy não depende do pacote de origem.
 
-**Regra do site: nenhuma imagem é cortada.** Toda foto e arte aparece inteira, na proporção original, em celular e computador: sem `object-fit: cover`, sem `clip-path` ou cantos chanfrados, sem cantos arredondados sobre a foto e sem zoom no hover. Fotos muito verticais ficam mais estreitas (`.frame--fit`, que limita a altura pela largura) e o par da estrutura usa caixas iguais com `object-fit: contain` (`.frame--contain`). O teste de interação confere isso em 390 e 1440 px.
+**Regra do site: nenhuma imagem é cortada.** Toda foto e arte aparece inteira, na proporção original, em celular e computador: sem `object-fit: cover`, sem `clip-path` ou cantos chanfrados, sem cantos arredondados sobre a foto e sem zoom no hover. Fotos muito verticais ficam mais estreitas (`.frame--fit`, que limita a altura pela largura) e os slides do carrossel da estrutura usam caixas iguais com `object-fit: contain` (`.frame--contain`). Gradientes e textos sobre fotos (carrossel e encerramento) são camadas por cima; o arquivo da foto não é editado. O teste de interação confere tudo isso em 390 e 1440 px.
 
 | Uso | Imagem | Origem |
 | --- | --- | --- |
 | Hero | fachada | `Edicoes/imagens/01-fachada-rip.jpg` |
-| Estrutura (par com frases) | vista geral em direção à entrada, escada e aparelhos | `Edicoes/imagens/02-…`, `03-…` |
+| Estrutura (carrossel com frases) | vista geral em direção à entrada, escada e aparelhos | `Edicoes/imagens/02-…`, `03-…` |
 | Musculação | aluno no aparelho vermelho | `Base/imagens-tratadas/treinos/09-…` |
 | CrossTraining | exercícios no chão (bola medicinal e peso) | `Edicoes/imagens/04-crosstraining.jpg` |
 | Free Pass | aperto de mãos | `Base/imagens-tratadas/conexao/22-…` |
 | Benefícios | artes Wellhub e TotalPass | `Edicoes/imagens-corrigidas/` (endereço atualizado) |
-| História | foto de grupo | `Base/imagens-tratadas/equipe/06-…` |
 | Convite “Venha fazer parte desse time!” | punhos se cumprimentando | `Edicoes/imagens/07-convite-time.jpg` |
-| Encerramento | aluno na esteira | `Edicoes/imagens/08-encerramento-primeiro-passo.jpg` |
+| Encerramento (mensagem sobre a foto) | aluno na esteira | `Edicoes/imagens/08-encerramento-primeiro-passo.jpg` |
 
-A fachada aparece só no hero. O catálogo completo continua em `RipAcademia-Base-ClaudeCode/catalogo.json`.
+A fachada aparece só no hero. A História não tem foto: a foto de grupo saiu na segunda rodada porque não representa a equipe completa. O catálogo completo continua em `RipAcademia-Base-ClaudeCode/catalogo.json`.
 
 ### Endereço nas artes de benefícios
 
 As artes recebidas (`Edicoes/imagens/05-wellhub-fonte.jpg` e `06-totalpass-fonte.jpg`) traziam “Rua Otto Daudt, 38 - B. Feitoria”. `scripts/corrigir-endereco-artes.py` troca só essa linha por “Av. Feitoria, 3740 - Feitoria”: apaga os traços do texto antigo preenchendo com o fundo vizinho e escreve a linha nova na mesma posição, em Manrope Bold (a fonte livre mais próxima da arte). Fotos, logos, WhatsApp, “São Leopoldo/RS”, cores e dimensões ficam idênticos (o script grava PNG, sem recompressão; só a faixa do endereço muda). Os fontes recebidos ficam intactos. O cabeçalho do script explica como rodar de novo.
 
-## Ribbon Glow (hero e convite)
+## Abertura do hero: logo e Predictive Arc 2
 
-A adaptação do código recebido (`animacoes/RibbonGlow-referencia.tsx`, Originkit; a cópia do pacote de edições é o mesmo código) está em `src/scripts/ribbon-glow.ts`. O controlador `src/scripts/wave-controller.ts` gerencia a onda nas duas seções que a usam, o hero e o convite “Venha fazer parte desse time!”, e as camadas ficam em `src/components/WaveBackground.astro`. O controle de pausa é `src/components/MotionToggle.astro`. O Predictive Arc Horizon não foi montado e não entra no bundle.
+A primeira tela mostra a logo real da RIP, grande e inteira, com o arco de pequenos quadrados vermelhos do **Predictive Arc 2** em movimento ao fundo. O título, a oferta, os CTAs e a fachada vêm logo abaixo, sem tela de carregamento. Este é o **único** efeito animado do site: a Ribbon Glow (hero e convite) foi removida por completo, junto com o botão manual de pausa.
 
-**Por que o topo do celular aparecia preto:** o controlador antigo só criava o renderer a partir de 1024 px de largura (`min-width: 1024px`), e o fundo estático em SVG desenhava a faixa na base de um viewBox largo; num hero estreito e alto, ela ficava atrás da foto e sob a máscara escura. A onda agora roda também no celular, com composição própria para telas estreitas.
+- Código recebido: `RipAcademia-Ajustes-Rodada-2/animacao/PredictiveArc2-referencia.tsx` (Originkit, exportado como `PredictiveArcHorizon`).
+- Adaptação: `src/scripts/predictive-arc.ts` (renderer) e o controlador no `<script>` de `src/components/Hero.astro`.
+- Preset vermelho do final do arquivo, sem alterações: fundo `#000000`, base `#F91700`, acento `#AC2B2B`, highlight `#000000`, density 40, dotSize 100, speed 50, hover 100, horizon rise 45 / radius 90 / thickness 100 / falloff 250. Os defaults azuis da função base não são usados.
 
-**Conferência do código real.** Os nomes citados no briefing batem com o código: `minWidth: 1200`, `minHeight: 800`, `MAX_DPR = 2`, `LAYERS = 84`, props `background`, `color1`, `color2`, `speed`, `size`, `angle`, `hover`, `reach`, `width`, `height`, campo em textura de meia resolução e cleanup de programas, textura, framebuffer e VAO. Duas observações:
-
-- O original não tem prop de deslocamento; o `offset` desta adaptação é novo.
-- O original escuta o ponteiro em `window`. A adaptação escuta só o hero.
-
-**Adaptações feitas:**
+**Logo:** é o mesmo recorte fiel usado no cabeçalho (`assets/brand/logo-rip-400.webp` e `logo-rip-790.webp`). O recorte tem fundo preto puro; com `mix-blend-mode: lighten`, esse preto deixa o arco aparecer em volta das letras, sem caixa opaca e sem redesenhar a marca. Um halo escuro e suave fica só atrás das letras, para o “RIP” vermelho não se perder nos quadrados vermelhos.
 
 | Tema | Implementação |
 | --- | --- |
-| Stack | módulo TypeScript nativo, importado dinamicamente (≈ 3,5 KB gzip) só quando vai rodar |
-| Responsividade | sem `minWidth` nem `minHeight`; o canvas fica em `inset: 0` na seção, cuja altura vem do conteúdo; `ResizeObserver` no lugar de medir o layout a cada frame |
-| Camadas | fundo estático em SVG (um desenho para telas largas, outro para estreitas) → canvas (opacidade 0,42 no hero desktop, 0,55 no celular, 0,6 no convite) → máscara escura só atrás do texto → conteúdo e foto. Tudo decorativo tem `aria-hidden` e `pointer-events: none` |
-| Composição | telas ≥ 1024 px: `offset [0.1, -0.26]`, faixa na borda inferior e na transição texto/foto. Telas menores: `offset [-0.05, 0.35]` e `size 55`, faixa curva na metade de cima do hero. Ao cruzar 1024 px, a faixa é reposicionada sem recriar o renderer (`setPlacement`) |
-| Duas seções | um canvas e um renderer por seção, criado só na primeira vez em que ela aparece; só a seção visível desenha. Nunca há dois loops na mesma seção |
-| Visibilidade | IntersectionObserver em cada seção e `visibilitychange`. O loop só existe entre `start()` e `stop()`; ao retomar, o tempo de referência é zerado |
-| Movimento reduzido | verificado antes de iniciar e acompanhado em tempo real; com a preferência ativa, fica o fundo estático e nenhum loop |
-| Controle do visitante | botão discreto só com ícone (48 × 48 px), no canto de cada seção com onda, longe dos CTAs; `aria-label` alterna entre “Pausar movimento” e “Retomar movimento”, com `aria-pressed`. Vale para as duas ondas e é lembrado no navegador. Retomar reaproveita o mesmo renderer |
-| Qualidade | DPR máximo 1,25 (desktop) e 1 (abaixo de 1024 px), desenho limitado a 30 quadros/s, campo em meia resolução e `LAYERS` como parâmetro de geração do shader (mantido em 84) |
-| Mobile | onda animada também no celular; o módulo WebGL só é baixado depois do `load`, em momento ocioso |
-| Inicialização | depois do `load` e em `requestIdleCallback`; shaders compilados com `KHR_parallel_shader_compile`, sem bloquear a thread principal |
-| Falhas | sem WebGL2, erro de compilação ou link, framebuffer incompleto ou perda de contexto: volta ao fundo estático, sem mensagem para o visitante, liberando o que já tinha sido criado |
-| Ciclo de vida | `destroy()` cancela o frame, desconecta observers e listeners e libera programas, textura, framebuffer e VAO |
+| Stack | módulo TypeScript nativo com WebGL 1, importado sob demanda depois do `load`, em momento ocioso (sem React) |
+| Shader | o fragment shader do original, sem alterações |
+| Tamanho | sem `minWidth 1200` / `minHeight 800`: o canvas cobre a área da abertura (60 % da altura da tela no desktop, 52 % no celular), medida por `ResizeObserver` |
+| Orçamento | DPR até 1,5 e 30 quadros/s (o original desenha todo quadro com DPR até 2) |
+| Visibilidade | IntersectionObserver na abertura e `visibilitychange`: fora da tela ou com a aba oculta, o loop para; ao voltar, retoma sem salto de tempo e sem segundo loop |
+| Movimento reduzido | desenha um único quadro parado do próprio shader (nenhum loop); acompanha a mudança da preferência em tempo real |
+| Sem WebGL ou falha | arco estático em CSS com a mesma geometria (raio 0,9 × largura, ápice a 45 % da base) e grade de quadrados; a logo continua visível. Também é o que aparece no primeiro instante, antes do renderer iniciar |
+| Ponteiro | complemento só com mouse/trackpad, lido na abertura (o canvas não recebe eventos); não bloqueia cliques nem rolagem |
+| Limpeza | `destroy()` cancela o frame, desconecta o observer e os listeners e libera programa, shaders e buffer; perda de contexto e falhas de compilação ou link voltam ao arco estático, sem mensagens para o visitante |
+| Botão de pausa | não há; as pausas são automáticas (visibilidade, aba oculta, movimento reduzido) |
 
-**Ponteiro:** a interação com o mouse (hover 15, reach 180) só é instalada com `(hover: hover) and (pointer: fine)`.
+`scripts/verify-dist.mjs` falha o build se algum resto da Ribbon Glow ou do botão de pausa voltar a ser publicado.
 
-**Camadas do shader:** a versão com 40–48 camadas não foi adotada. A medição com 84 não indicou custo relevante no desktop testado (veja abaixo), e reduzir camadas muda forma e brilho. No celular, o custo ainda precisa ser medido em aparelho real (veja as pendências); DPR menor e menos camadas são os ajustes disponíveis, sem desligar a onda.
+## Carrossel da estrutura
 
-**Contraste:** no pior quadro da animação, o texto do hero fica ≥ 4,9:1 em 360 e 390 px e ≥ 10:1 em 1440 px; o vermelho dos títulos grandes (“melhor versão.”, “desse time!”) fica ≥ 3,5:1 (texto grande). Os cinzas pequenos do hero usam `#c6c6ce` para manter 4,5:1 sobre a onda.
+As duas fotos da estrutura ficam num carrossel horizontal (`src/components/StructureSection.astro`), na ordem: vista geral (“Estrutura pensada para o seu melhor desempenho.”) e escada (“O espaço ideal para a sua evolução.”).
+
+- Rolagem nativa com parada em cada slide (toque e trackpad) e arraste com mouse. A rolagem vertical da página continua livre.
+- Botões “Foto anterior” e “Próxima foto”, indicadores (“Ir para a foto 1 de 2”) e setas do teclado com o carrossel em foco. Sem autoplay e sem biblioteca.
+- Um slide principal por vez e a borda do próximo. Os slides têm o mesmo tamanho e as fotos aparecem inteiras.
+- Frases em Inter (peso 550), sobre um gradiente contínuo no alto da foto, com fade de 0,7 s na primeira vez que o slide aparece.
+- Sem JavaScript, os controles ficam ocultos e a rolagem nativa continua funcionando.
 
 ## Mensuração (GA4, GTM, Meta Pixel)
 
@@ -156,7 +155,25 @@ Para acompanhar o funil (clique → conversa iniciada → visita agendada → ma
 
 ## Testes realizados
 
-### Pacote de edições (ajustes 1–7)
+### Segunda rodada (ajustes 1–5)
+
+Ambiente: container Linux, Node 22, Chromium headless do Playwright com WebGL **por software** (SwiftShader), contra o build de produção servido por `astro preview` sob `/RIPACADEMIA/`. Celular = emulação (viewport, toque e `isMobile`); não houve teste em aparelho real.
+
+| Verificação | Resultado |
+| --- | --- |
+| `npm run build` | `astro check` 0 erros; `verify-dist` aprovado, incluindo a nova checagem de restos da Ribbon Glow |
+| Larguras 360, 390, 768 e 1440 | sem scroll horizontal, sem erros de console nem respostas 4xx; capturas da página inteira revisadas |
+| `npm run test:e2e` | **64/64**. Inclui: um único contexto WebGL (nenhum WebGL2) e nenhum canvas fora do hero; nenhum botão de pausa, área clicável ou resto da Ribbon Glow; logo grande, inteira, na primeira tela e com `lighten`; loop rodando (41–59 rAF/s), parado fora da tela e com a aba oculta, retomado sem segundo loop; resize 1440 → 390 → 1440 com o mesmo renderer; movimento reduzido com quadro parado e 0 rAF; sem WebGL com o arco em CSS; carrossel por botões, indicadores, teclado, arraste com mouse e toque; slides do mesmo tamanho; frases exatas em Inter 550; História sem foto e com CTA; convite sem canvas; encerramento com título, apoio e CTA dentro da foto (no celular, a partir de 44 % da altura, abaixo do rosto); imagens sem recorte em 390 e 1440 px; conteúdo sem JavaScript |
+| Movimento do arco | entre capturas com 1,5 s de intervalo mudam 8–9 % dos pixels da primeira tela no desktop e 10–11 % no celular |
+| Contraste (`tests/e2e/contrast.mjs`, pixel mais claro sob cada texto) | frases do carrossel ≥ 4,65:1; título e apoio do encerramento ≥ 14:1; “primeiro passo.” ≥ 3,87:1 (texto grande); texto do hero ≥ 8,2:1 |
+
+| Desempenho (`npm run test:perf`, 1440 × 900, 3 amostras) | arco animado: 30 desenhos/s, quadros p50 17–33 ms e p95 33–50 ms, clique → pintura 32–34 ms; arco parado (movimento reduzido): 0 desenhos/s, quadros 16,7 ms, clique → pintura 5–10 ms; LCP 168–200 ms e CLS ≤ 0,005 nos dois casos |
+
+Os rAF/s e os tempos de quadro acima são do Chromium headless com WebGL **por software**: o arco é desenhado na CPU e o custo aparece exagerado. O desempenho em GPU e em aparelhos reais não foi medido.
+
+### Primeira rodada de edições (ajustes 1–7)
+
+Resultados da versão com a Ribbon Glow no hero e no convite, substituída na segunda rodada; ficam aqui como registro.
 
 Ambiente: container Linux, Node 22, Chromium headless do Playwright com WebGL2 **por software** (SwiftShader), contra o build de produção servido por `astro preview` sob `/RIPACADEMIA/`. Celular = emulação (viewport, toque e `isMobile`); não houve teste em iPhone ou Android reais.
 
@@ -210,7 +227,7 @@ Para repetir: `npm run build && npm run preview` em um terminal e, em outro, `np
 7. **Autorização de uso de imagem** de todas as pessoas que aparecem nas fotos.
 8. **URL oficial no Google Maps** (opcional): sem ela, “Como chegar” abre uma busca pelo endereço. Não há coordenadas inventadas.
 9. **Avaliações autênticas** (opcional): o componente está pronto e desativado.
-10. **Onda no celular:** está ativa (pedido do pacote de edições), mas só foi validada por emulação. Medir em aparelho real, inclusive um Android modesto (quadros, temperatura, bateria); se pesar, reduzir DPR ou camadas em `src/scripts/wave-controller.ts`, sem desligar a onda.
+10. **Arco no celular:** anima também no celular, mas só foi validado por emulação. Medir em aparelho real, inclusive um Android modesto; se pesar, reduzir `maxDpr` ou `fps` no controlador de `src/components/Hero.astro`, sem desligar o arco.
 11. **Artes Wellhub e TotalPass:** confirmar com a academia a linha corrigida (“Av. Feitoria, 3740 - Feitoria”), escrita em fonte livre parecida com a original. Se houver os arquivos editáveis das artes, o ideal é exportá-las de novo com o endereço atual.
 
 ## Estrutura
@@ -219,12 +236,12 @@ Para repetir: `npm run build && npm run preview` em um terminal e, em outro, `np
 src/
   pages/        index, privacidade, 404, sitemap.xml, robots.txt
   layouts/      BaseLayout (head, SEO, JSON-LD ExerciseGym, eventos, revelação)
-  components/   Header, Hero, WaveBackground, MotionToggle, StructureSection, ModalitiesSection,
+  components/   Header, Hero (abertura com logo e arco), StructureSection (carrossel), ModalitiesSection,
                 FreePassSection, BenefitsSection, HistorySection, InviteSection, LocationSection,
                 FAQ, FinalCTA, MobileConversionBar, ConsentBanner, Footer, Photo, Icon, WhatsAppLink
   data/         business (config central), faq, photos, images.json (gerado)
   lib/          whatsapp, analytics, paths, images
-  scripts/      ribbon-glow (renderer WebGL2 adaptado), wave-controller (hero e convite)
+  scripts/      predictive-arc (renderer WebGL do arco do hero)
   styles/       tokens, global
 scripts/        build-images.mjs, verify-dist.mjs, corrigir-endereco-artes.py
 tests/e2e/      interact, consent, contrast, perf
