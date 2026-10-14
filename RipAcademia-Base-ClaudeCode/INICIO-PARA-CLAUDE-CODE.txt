@@ -1,0 +1,3 @@
+Leia por inteiro PROMPT-CLAUDE-CODE-RIP-ACADEMIA.md, começando pela seção 0 (repositório e passo zero) e pela seção 7.1 sobre Ribbon Glow. Depois leia LEIA-ME.md, CATALOGO.md, CONFIGURACAO-NEGOCIO.json e animacoes/LEIA-ME.md. Faça o passo zero e me mostre a tabela de verificação do pacote antes de escrever código. Inspecione a logo original, as fotografias e animacoes/RibbonGlow-referencia.tsx. Implemente o site com uma única onda vermelha discreta no hero, adaptando responsividade, desempenho e acessibilidade conforme o prompt. Não monte o Predictive Arc Horizon junto. Use os dados atualizados da configuração. Conclua a implementação e os testes disponíveis no projeto.
+
+Para alterações futuras, use os modelos de PROMPT-EDICAO-RIP-ACADEMIA.md.

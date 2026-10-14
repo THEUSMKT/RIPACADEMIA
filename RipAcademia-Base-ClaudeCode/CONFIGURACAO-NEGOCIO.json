@@ -1,0 +1,80 @@
+{
+  "name": "RIP Academia",
+  "tagline": "Seja sua melhor versão",
+  "brandSince": 2000,
+  "whatsappDisplay": "(51) 99985-0575",
+  "whatsappNumber": "5551999850575",
+  "instagramUrl": "https://www.instagram.com/rip_academia/",
+  "address": {
+    "streetAddress": "Av. Feitoria, 3740",
+    "neighborhood": "Feitoria",
+    "addressLocality": "São Leopoldo",
+    "addressRegion": "RS",
+    "addressCountry": "BR",
+    "postalCode": null
+  },
+  "openingHours": [
+    {
+      "days": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "05:30",
+      "closes": "22:00"
+    },
+    {
+      "days": [
+        "Saturday"
+      ],
+      "opens": "09:00",
+      "closes": "16:00"
+    }
+  ],
+  "sundayHours": null,
+  "holidayHours": null,
+  "unspecifiedHoursLabel": "Consulte a equipe",
+  "benefitsPresented": [
+    "Wellhub",
+    "TotalPass"
+  ],
+  "modalitiesPresented": [
+    "Musculação",
+    "CrossTraining"
+  ],
+  "freePass": {
+    "enabledFromProvidedProfile": true,
+    "cta": "Agendar meu Free Pass",
+    "duration": null,
+    "conditions": null,
+    "message": "Olá! Vi o site da RIP Academia e gostaria de agendar meu Free Pass. Como funciona?"
+  },
+  "productionDomain": null,
+  "mapsOfficialUrl": null,
+  "coordinates": null,
+  "analytics": {
+    "ga4MeasurementId": null,
+    "gtmContainerId": null,
+    "metaPixelId": null
+  },
+  "sources": {
+    "brand": "IMG_8515.jpeg",
+    "address": [
+      "IMG_8516.jpeg",
+      "IMG_8508.jpeg"
+    ],
+    "hours": "IMG_8516.jpeg",
+    "whatsapp": "IMG_8516.jpeg",
+    "instagram": "IMG_8508.jpeg",
+    "benefits": [
+      "IMG_8508.jpeg",
+      "IMG_8517.jpeg",
+      "IMG_8518.jpeg"
+    ],
+    "freePass": "IMG_8508.jpeg"
+  },
+  "sourceStatus": "Transcrição dos materiais fornecidos pelo usuário; sem consulta independente à empresa.",
+  "historicalMaterialsWarning": "Rua Otto Daudt, 38 e horários 6h–22h / 9h–15h pertencem às artes antigas e não são os dados principais desta versão."
+}
