@@ -1,0 +1,11 @@
+RIP ACADEMIA — SEGUNDA RODADA DE EDIÇÕES
+
+Este pacote contém o prompt dos cinco ajustes, o novo código completo da animação, as três fotos reutilizadas e uma referência da logo.
+
+Envie este ZIP ao Claude Code no projeto existente. Se precisar, extraia a pasta e anexe os arquivos individualmente.
+
+Mensagem para enviar junto:
+
+Leia PROMPT-RIP-ACADEMIA-RODADA-2.md, confira o MAPA-DOS-ARQUIVOS.md e examine os assets. Aplique os cinco ajustes desta segunda rodada ao site existente. Remova Ribbon Glow e use apenas no hero o novo código PredictiveArc2-referencia.tsx, com a logo em primeiro plano. Preserve fotos inteiras e os dados de contato. Valide desktop e mobile e inclua os assets necessários nas alterações do repositório.
+
+A ideia de animação global foi descartada. A foto de grupo será removida; as três fotos incluídas servem para carrossel e encerramento.

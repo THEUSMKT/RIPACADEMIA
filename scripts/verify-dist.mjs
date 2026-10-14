@@ -4,7 +4,8 @@
  *  - nenhum dado antigo (Rua Otto Daudt, abertura às 6h, sábado até 15h) no HTML/JS publicado;
  *  - links de WhatsApp apontando para o número correto, com mensagem codificada;
  *  - nenhum href="#" usado como ação falsa;
- *  - todo recurso local referenciado no HTML existe (respeitando o base).
+ *  - todo recurso local referenciado no HTML existe (respeitando o base);
+ *  - a animação antiga (Ribbon Glow) não volta ao bundle: o único efeito é o Predictive Arc 2 do hero.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -32,7 +33,8 @@ for (const f of files) {
   if (/\.(png|jpe?g)$/i.test(r) && !r.startsWith('assets/brand/')) errors.push(`Imagem de origem publicada: ${r}`);
   if (/IMG_\d+/i.test(r)) errors.push(`Referência IMG_* publicada: ${r}`);
   if (/\.tsx$/i.test(r)) errors.push(`TSX de referência publicado: ${r}`);
-  if (/arte-horarios|originais-referencia|referencias-atualizadas|imagens-tratadas|imagens-corrigidas|-fonte\.|RipAcademia-(Base|Edicoes)/i.test(r)) errors.push(`Material do pacote publicado: ${r}`);
+  if (/ribbon|wave-controller|WaveBackground|MotionToggle/i.test(r)) errors.push(`Resto da Ribbon Glow publicado: ${r}`);
+  if (/arte-horarios|originais-referencia|referencias-atualizadas|imagens-tratadas|imagens-corrigidas|-fonte\.|RipAcademia-(Base|Edicoes|Ajustes)/i.test(r)) errors.push(`Material do pacote publicado: ${r}`);
 }
 
 // 2. Dados antigos e 3. links
@@ -42,6 +44,7 @@ let waLinks = 0;
 for (const f of textFiles) {
   const txt = fs.readFileSync(f, 'utf8');
   for (const re of oldData) if (re.test(txt)) errors.push(`Dado antigo (${re}) em ${rel(f)}`);
+  if (/data-motion-toggle|data-wave-host|uOffset/.test(txt)) errors.push(`Resto da Ribbon Glow ou do botão de pausa em ${rel(f)}`);
   if (!f.endsWith('.html')) continue;
 
   for (const m of txt.matchAll(/href="([^"]*)"/g)) {

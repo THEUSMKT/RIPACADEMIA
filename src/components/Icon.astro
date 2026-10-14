@@ -1,7 +1,7 @@
 ---
 /** Ícones de traço simples, decorativos (aria-hidden). O texto do controle carrega o significado. */
 interface Props {
-  name: 'whatsapp' | 'arrow' | 'arrow-down' | 'map' | 'instagram' | 'phone' | 'menu' | 'close' | 'plus' | 'pause' | 'play' | 'chevron-left' | 'chevron-right' | 'expand';
+  name: 'whatsapp' | 'arrow' | 'arrow-down' | 'map' | 'instagram' | 'phone' | 'menu' | 'close' | 'plus' | 'chevron-left' | 'chevron-right';
   class?: string;
   [key: `data-${string}`]: unknown;
 }
@@ -34,9 +34,6 @@ const { name, class: className, ...rest } = Astro.props;
   {name === 'menu' && <path d="M4 7h16M4 12h16M4 17h10" />}
   {name === 'close' && <path d="M6 6l12 12M18 6L6 18" />}
   {name === 'plus' && <path d="M12 5v14M5 12h14" />}
-  {name === 'pause' && <path d="M9 6v12M15 6v12" />}
-  {name === 'play' && <path d="M8 5.5v13l10-6.5z" />}
   {name === 'chevron-left' && <path d="M15 5l-7 7 7 7" />}
   {name === 'chevron-right' && <path d="M9 5l7 7-7 7" />}
-  {name === 'expand' && <path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" />}
 </svg>

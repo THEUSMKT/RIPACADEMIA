@@ -1,8 +1,9 @@
 ---
 /**
- * Encerramento: foto de treino inteira e a mensagem final, com um único CTA local (Free Pass).
- * Desktop: mensagem e foto lado a lado. Mobile: frase e CTA acima da foto.
- * Entrada: a foto aparece com fade e deslocamento discreto, seguida da frase (≈ 0,9 s, uma vez).
+ * Encerramento: uma única composição. A foto de treino inteira forma a base (o <img> fica no fluxo e a
+ * proporção dela define a área); gradientes suaves nas bordas e a mensagem com o CTA ficam por cima,
+ * na parte de baixo, longe do rosto. A foto não recebe zoom nem recorte.
+ * Entrada: os trechos da mensagem aparecem em sequência (≈ 0,9 s, uma vez).
  */
 import { business } from '../data/business';
 import { ratioVar } from '../lib/images';
@@ -11,17 +12,23 @@ import WhatsAppLink from './WhatsAppLink.astro';
 ---
 
 <section class="section final" aria-labelledby="final-title">
-  <div class="container final__grid" data-reveal>
-    <div class="final__copy">
-      <h2 id="final-title">Sua melhor versão começa com o <span class="accent">primeiro passo.</span></h2>
-      <p class="lede">Venha conhecer a RIP e dê o seu primeiro passo.</p>
-      <WhatsAppLink intent="free_pass" placement="fechamento" ctaId="fechamento_free_pass">
-        {business.freePass.cta}
-      </WhatsAppLink>
-    </div>
-    <div class="final__media">
-      <div class="frame frame--fit final__frame" style={ratioVar('encerramento-primeiro-passo')}>
-        <Photo id="encerramento-primeiro-passo" sizes="(min-width: 1024px) 480px, (min-width: 600px) 440px, 92vw" />
+  <div class="container">
+    <div class="final__stage" style={ratioVar('encerramento-primeiro-passo')} data-reveal>
+      <div class="final__photo">
+        <Photo id="encerramento-primeiro-passo" sizes="(min-width: 768px) 640px, 100vw" />
+      </div>
+      <div class="final__shade" aria-hidden="true"></div>
+      <div class="final__content">
+        <h2 id="final-title">
+          <span class="final__step" style="--s: 0">Sua melhor versão começa com o</span>
+          <span class="final__step accent" style="--s: 1">primeiro passo.</span>
+        </h2>
+        <p class="final__lede final__step" style="--s: 2">Venha conhecer a RIP e dê o seu primeiro passo.</p>
+        <div class="final__step" style="--s: 3">
+          <WhatsAppLink intent="free_pass" placement="fechamento" ctaId="fechamento_free_pass">
+            {business.freePass.cta}
+          </WhatsAppLink>
+        </div>
       </div>
     </div>
   </div>
@@ -29,69 +36,113 @@ import WhatsAppLink from './WhatsAppLink.astro';
 
 <style>
   .final {
-    background: var(--surface);
+    background: var(--background);
   }
-  .final__grid {
-    display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    gap: clamp(28px, 5vw, 80px);
-    align-items: center;
+  /*
+   * A largura é limitada pela altura da tela (--ratio = largura ÷ altura da foto), para a composição caber
+   * inteira num monitor; no celular ocupa a largura toda da tela.
+   */
+  .final__stage {
+    position: relative;
+    width: min(100%, 680px, calc(86vh * var(--ratio)));
+    margin-inline: auto;
   }
-  .final__copy {
+  .final__photo :global(img) {
+    width: 100%;
+    height: auto;
+  }
+  /*
+   * Gradientes sobre a foto (sem editar o arquivo): bordas que se fundem ao fundo da seção, centro
+   * transparente e uma base mais escura onde fica o texto. O rosto, no alto, fica sem escurecimento.
+   */
+  .final__shade {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgb(9 9 11 / 0.7) 0%, rgb(9 9 11 / 0) 12%),
+      linear-gradient(90deg, rgb(9 9 11 / 0.75) 0%, rgb(9 9 11 / 0) 12%, rgb(9 9 11 / 0) 88%, rgb(9 9 11 / 0.75) 100%),
+      linear-gradient(0deg, rgb(9 9 11 / 0.6) 0%, rgb(9 9 11 / 0) 45%);
+  }
+  /*
+   * O próprio bloco de texto leva o gradiente mais escuro: começa transparente um pouco acima do título
+   * (padding-top) e fica escuro onde há texto, em qualquer largura. O rosto, no alto, não é escurecido.
+   */
+  .final__content {
+    /* Faixa de transição acima do título: o escurecimento já está forte quando o texto começa. */
+    --fade: clamp(56px, 7vw, 96px);
+    position: absolute;
+    inset: auto 0 0 0;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 20px;
+    gap: 14px;
+    padding: var(--fade) clamp(20px, 5%, 40px) clamp(20px, 5%, 40px);
+    background: linear-gradient(
+      0deg,
+      rgb(9 9 11 / 0.94) 0%,
+      rgb(9 9 11 / 0.88) calc(100% - var(--fade)),
+      rgb(9 9 11 / 0.55) calc(100% - var(--fade) * 0.55),
+      rgb(9 9 11 / 0.2) calc(100% - var(--fade) * 0.22),
+      rgb(9 9 11 / 0) 100%
+    );
   }
-  .final__copy h2 {
-    font-size: clamp(2.4rem, 1.4rem + 4vw, 4.6rem);
+  .final__content h2 {
+    font-size: clamp(2rem, 1.3rem + 2.6vw, 3.4rem);
+    max-width: 14ch;
   }
-  .final__copy :global(.btn) {
-    margin-top: 6px;
+  /* Cada trecho em bloco próprio: "primeiro passo." sempre começa numa linha nova, com ou sem animação. */
+  .final__content h2 .final__step {
+    display: inline-block;
   }
-  .final__media {
-    display: flex;
-    justify-content: flex-end;
+  .final__lede {
+    font-size: clamp(1rem, 0.95rem + 0.3vw, 1.15rem);
+    color: #e4e4e9;
+    max-width: 36ch;
   }
-  .final__frame {
-    --fit-h: min(78vh, 680px);
+  .final__content :global(.btn) {
+    margin-top: 4px;
   }
 
-  /* Sequência: foto primeiro, frase depois. Sem escala nem zoom. */
-  :global(.reveal-on) .final__grid[data-reveal] {
+  /* Entrada em sequência (só com o script de revelação; sem JS ou com movimento reduzido, já aparece pronto). */
+  :global(.reveal-on) .final__stage[data-reveal] {
     opacity: 1;
     transform: none;
   }
-  :global(.reveal-on) .final__media,
-  :global(.reveal-on) .final__copy {
+  :global(.reveal-on) .final__step {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(12px);
     transition:
-      opacity 0.55s var(--ease),
-      transform 0.55s var(--ease);
+      opacity 0.5s var(--ease),
+      transform 0.5s var(--ease);
+    transition-delay: calc(var(--s) * 140ms);
   }
-  :global(.reveal-on) .final__copy {
-    transition-delay: 0.35s;
-  }
-  :global(.reveal-on) .final__grid:global(.is-in) .final__media,
-  :global(.reveal-on) .final__grid:global(.is-in) .final__copy {
+  :global(.reveal-on) .final__stage:global(.is-in) .final__step {
     opacity: 1;
     transform: none;
   }
 
-  @media (max-width: 1023px) {
-    .final__grid {
-      grid-template-columns: minmax(0, 1fr);
-    }
-    .final__media {
-      justify-content: flex-start;
-    }
-    .final__frame {
-      --fit-h: min(72vh, 620px);
-    }
-  }
+  /* Celular: a foto vai de borda a borda da tela; o texto fica na base, dentro da foto. */
   @media (max-width: 599px) {
-    .final__copy :global(.btn) {
+    .final__stage {
+      width: auto;
+      margin-inline: calc(-1 * var(--gutter));
+    }
+    .final__content {
+      --fade: 56px;
+      padding: var(--fade) var(--gutter) 22px;
+      gap: 10px;
+    }
+    .final__content h2 {
+      font-size: clamp(1.75rem, 1rem + 4vw, 2.2rem);
+    }
+    .final__lede {
+      font-size: 0.98rem;
+    }
+    .final__content :global(.btn) {
+      width: 100%;
+    }
+    .final__content > .final__step:last-child {
       width: 100%;
     }
   }

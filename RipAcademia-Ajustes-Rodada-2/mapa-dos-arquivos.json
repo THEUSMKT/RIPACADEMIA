@@ -1,0 +1,41 @@
+{
+  "imagens": [
+    {
+      "arquivo": "imagens/estrutura-vista-geral.jpg",
+      "original": "4815F1A0-BDA2-4A38-8C0E-22B3979E8011(2).jpeg",
+      "uso": "Ajuste 4, primeiro slide",
+      "largura": 1080,
+      "altura": 1456,
+      "sha256": "b920c650f918ec6dd00b6fd2e76e1253b8f9076f08a73bca50ab0e46fd57087f"
+    },
+    {
+      "arquivo": "imagens/estrutura-escada.jpg",
+      "original": "B04F1AD7-6290-4B0B-8655-6457F1CA7C69(3).jpeg",
+      "uso": "Ajuste 4, segundo slide",
+      "largura": 1080,
+      "altura": 1456,
+      "sha256": "c78ad58d7a73bd3d58f986338f9f457b0cef5856691aec30957d2a6beee06b9c"
+    },
+    {
+      "arquivo": "imagens/encerramento-primeiro-passo.jpg",
+      "original": "F41460BD-6C1E-421D-BDB8-43CBCD8E26E0.jpeg",
+      "uso": "Ajuste 3, foto atrás dos textos",
+      "largura": 1080,
+      "altura": 1456,
+      "sha256": "b2a163754ffe395848b256b82fa2c585c13c602aa839f29a44375966b8daefe9"
+    },
+    {
+      "arquivo": "marca/logo-rip-original.jpeg",
+      "original": "logo-rip-original.jpeg",
+      "uso": "Referência da logo para o ajuste 5",
+      "largura": 1170,
+      "altura": 1239,
+      "sha256": "162cbfe703bdc1adb3bae012fed44d547567283f159f12a1e67740256317c08f"
+    }
+  ],
+  "animacao": {
+    "arquivo": "animacao/PredictiveArc2-referencia.tsx",
+    "original": "Texto colado(1).txt",
+    "sha256": "6ff612c04f085c2a2d6c7055d4fbc90bc27096554cfb33ae7bc5d987916c6916"
+  }
+}
