@@ -1,0 +1,138 @@
+---
+import { business } from '../data/business';
+import Photo from './Photo.astro';
+import WhatsAppLink from './WhatsAppLink.astro';
+
+// Avaliações só aparecem se houver itens autênticos em business.reviews (texto, autoria, fonte e link).
+const reviews = business.reviews;
+---
+
+<section class="section history" id="historia" aria-labelledby="historia-title">
+  <div class="container history__grid">
+    <figure class="history__media" data-reveal>
+      <div class="frame frame--cut-left history__frame">
+        <Photo id="foto-de-grupo" sizes="(min-width: 1024px) 40vw, 92vw" />
+      </div>
+      <figcaption>Registro da academia: pessoas reunidas no espaço da RIP.</figcaption>
+    </figure>
+
+    <div class="history__copy" data-reveal>
+      <p class="history__year" aria-hidden="true">{business.brandSince}</p>
+      <p class="eyebrow">História</p>
+      <h2 id="historia-title">Uma história que começou em {business.brandSince}.</h2>
+      <p class="lede">
+        A RIP Academia reúne uma história de treino em São Leopoldo e um espaço para você conhecer pessoalmente.
+        Converse com a equipe e encontre uma forma de começar.
+      </p>
+      <WhatsAppLink intent="plans" placement="historia" ctaId="historia_conversar" variant="ghost" icon="arrow">
+        Conversar com a equipe
+      </WhatsAppLink>
+    </div>
+  </div>
+
+  {
+    reviews.length > 0 && (
+      <div class="container history__reviews">
+        <h3>O que dizem sobre a RIP</h3>
+        <ul>
+          {reviews.map((r) => (
+            <li>
+              <blockquote>
+                <p>{r.text}</p>
+              </blockquote>
+              <p class="history__review-meta">
+                {r.author} ·{' '}
+                <a class="text-link" href={r.url} target="_blank" rel="noopener noreferrer">
+                  {r.source}
+                  <span class="sr-only"> (abre em nova aba)</span>
+                </a>
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .history {
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .history__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(28px, 5vw, 88px);
+    align-items: center;
+  }
+  .history__media {
+    margin: 0;
+  }
+  .history__frame {
+    aspect-ratio: 4 / 5;
+  }
+  .history__frame :global(img) {
+    height: 100%;
+  }
+  .history__media figcaption {
+    margin-top: 10px;
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+  .history__copy {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  /* Ano em contorno, como grafismo estático. */
+  .history__year {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(5rem, 3rem + 9vw, 11rem);
+    line-height: 0.8;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgb(242 10 22 / 0.55);
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+    user-select: none;
+  }
+  .history__reviews {
+    margin-top: var(--section-y);
+  }
+  .history__reviews ul {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .history__reviews li {
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+  }
+  .history__reviews blockquote {
+    margin: 0;
+  }
+  .history__review-meta {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 1023px) {
+    .history__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .history__copy {
+      order: -1;
+    }
+    .history__frame {
+      aspect-ratio: 4 / 3.4;
+    }
+  }
+</style>

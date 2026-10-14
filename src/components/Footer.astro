@@ -1,0 +1,157 @@
+---
+import { business, fullAddress, formatRange } from '../data/business';
+import { withBase } from '../lib/paths';
+import Icon from './Icon.astro';
+
+interface Props {
+  home?: boolean;
+}
+const { home = true } = Astro.props;
+const prefix = home ? '' : withBase('');
+const nav = [
+  { href: `${prefix}#estrutura`, label: 'Estrutura' },
+  { href: `${prefix}#modalidades`, label: 'Modalidades' },
+  { href: `${prefix}#free-pass`, label: 'Free Pass' },
+  { href: `${prefix}#beneficios`, label: 'Benefícios' },
+  { href: `${prefix}#localizacao`, label: 'Localização' },
+  { href: `${prefix}#perguntas`, label: 'Perguntas frequentes' },
+];
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <img src={withBase('assets/brand/logo-rip-400.png')} alt="RIP Academia, desde 2000" width="200" height="91" />
+      <p>{business.tagline}.</p>
+    </div>
+
+    <div class="footer__col">
+      <h2 class="footer__title">Contato</h2>
+      <ul>
+        <li>
+          <a class="footer__link" href={`tel:${business.phoneE164}`}>
+            <Icon name="phone" />
+            {business.whatsappDisplay}
+          </a>
+        </li>
+        <li>
+          <a class="footer__link" href={business.instagramUrl} target="_blank" rel="noopener noreferrer">
+            <Icon name="instagram" />
+            {business.instagramHandle}
+            <span class="sr-only"> (Instagram, abre em nova aba)</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="footer__col">
+      <h2 class="footer__title">Endereço</h2>
+      <address>{fullAddress}</address>
+      <ul class="footer__hours">
+        {business.hours.map((h) => <li>{h.label}: {formatRange(h.opens, h.closes)}</li>)}
+        <li>{business.unspecifiedHours.label}: {business.unspecifiedHours.value.toLowerCase()}</li>
+      </ul>
+    </div>
+
+    <nav class="footer__col" aria-label="Rodapé">
+      <h2 class="footer__title">Navegação</h2>
+      <ul>
+        {
+          nav.map((n) => (
+            <li>
+              <a class="footer__link" href={n.href}>
+                {n.label}
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a class="footer__link" href={withBase('privacidade/')}>Privacidade</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="container footer__bottom">
+    <p>© {year} {business.name}. Todos os direitos reservados.</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: #050506;
+    border-top: 1px solid var(--line);
+    padding-block: clamp(48px, 6vw, 80px) 24px;
+    font-size: 0.95rem;
+  }
+  .footer__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(0, 1fr));
+    gap: 32px;
+  }
+  .footer__brand img {
+    width: 200px;
+    height: auto;
+    mix-blend-mode: lighten;
+  }
+  .footer__brand p {
+    margin-top: 14px;
+    color: var(--muted);
+  }
+  .footer__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .footer address {
+    font-style: normal;
+  }
+  .footer__hours {
+    margin-top: 10px !important;
+    color: var(--muted);
+  }
+  .footer__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    text-decoration: none;
+  }
+  .footer__link:hover {
+    color: #fff;
+    text-decoration: underline;
+    text-decoration-color: var(--brand-red);
+    text-underline-offset: 4px;
+  }
+  .footer__link :global(svg) {
+    width: 18px;
+    height: 18px;
+    color: var(--brand-red);
+  }
+  .footer__bottom {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  @media (max-width: 1023px) {
+    .footer__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 599px) {
+    .footer__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

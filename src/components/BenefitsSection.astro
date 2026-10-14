@@ -1,0 +1,104 @@
+---
+import WhatsAppLink from './WhatsAppLink.astro';
+
+// Identificação textual (sem logos ou modelos das artes recebidas). A RIP não é representante dessas empresas.
+const benefits = [
+  { id: 'wellhub', name: 'Wellhub', cta: 'Consultar acesso pelo Wellhub', intent: 'wellhub' },
+  { id: 'totalpass', name: 'TotalPass', cta: 'Consultar acesso pelo TotalPass', intent: 'totalpass' },
+] as const;
+---
+
+<section class="section benefits" id="beneficios" aria-labelledby="beneficios-title">
+  <div class="container benefits__grid">
+    <div class="benefits__copy" data-reveal>
+      <p class="eyebrow">Benefícios corporativos</p>
+      <h2 id="beneficios-title">Tem benefício corporativo? Consulte seu acesso à RIP.</h2>
+      <p class="lede">Verifique com a equipe os planos e as condições compatíveis com o seu benefício.</p>
+    </div>
+    <ul class="benefits__list">
+      {
+        benefits.map((b) => (
+          <li class="benefit" data-reveal>
+            <span class="benefit__label">Benefício aceito</span>
+            <strong class="benefit__name">{b.name}</strong>
+            <WhatsAppLink intent={b.intent} placement="beneficios" ctaId={`beneficio_${b.id}`} variant="ghost" icon="arrow">
+              {b.cta}
+            </WhatsAppLink>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .benefits {
+    background: var(--background);
+  }
+  .benefits__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    gap: clamp(28px, 5vw, 80px);
+    align-items: center;
+  }
+  .benefits__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .benefits__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 16px;
+  }
+  .benefit {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'label cta'
+      'name cta';
+    align-items: center;
+    gap: 4px 20px;
+    padding: 24px 26px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--brand-red);
+    border-radius: var(--radius-lg);
+  }
+  .benefit__label {
+    grid-area: label;
+    font-size: 0.85rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+  .benefit__name {
+    grid-area: name;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 1.5rem + 1.6vw, 2.6rem);
+    line-height: 1;
+  }
+  .benefit :global(.btn) {
+    grid-area: cta;
+  }
+
+  @media (max-width: 1023px) {
+    .benefits__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 599px) {
+    .benefit {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: 'label' 'name' 'cta';
+      gap: 6px;
+      padding: 20px;
+    }
+    .benefit :global(.btn) {
+      margin-top: 12px;
+      width: 100%;
+    }
+  }
+</style>

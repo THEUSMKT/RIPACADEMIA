@@ -1,0 +1,233 @@
+---
+import type { Intent } from '../lib/whatsapp';
+import type { PhotoId } from '../data/photos';
+import Photo from './Photo.astro';
+import WhatsAppLink from './WhatsAppLink.astro';
+
+const modalities: { id: string; title: string; text: string; cta: string; intent: Intent; photo: PhotoId; caption: string }[] = [
+  {
+    id: 'musculacao',
+    title: 'Musculação',
+    text: 'Treine força e construa uma rotina com os aparelhos e a estrutura da RIP.',
+    cta: 'Conhecer a musculação',
+    intent: 'musculacao',
+    photo: 'aluno-aparelho-vermelho',
+    caption: 'Treino em aparelho no salão de musculação',
+  },
+  {
+    id: 'crosstraining',
+    title: 'CrossTraining',
+    text: 'Conheça a proposta de CrossTraining e consulte a equipe sobre turmas e horários.',
+    cta: 'Saber sobre o CrossTraining',
+    intent: 'cross_training',
+    photo: 'exercicios-no-chao',
+    caption: 'Exercícios no chão com bola medicinal e peso',
+  },
+];
+
+const moments: { intent: Intent; title: string; text: string }[] = [
+  { intent: 'comecar', title: 'Quero começar', text: 'Nunca treinei ou ainda não conheço os aparelhos.' },
+  { intent: 'voltar', title: 'Quero voltar à rotina', text: 'Já treinei e quero retomar com constância.' },
+  { intent: 'evoluir', title: 'Quero evoluir no treino', text: 'Treino e busco uma nova estrutura para avançar.' },
+];
+---
+
+<section class="section modalities" id="modalidades" aria-labelledby="modalidades-title">
+  <div class="container">
+    <header class="modalities__head" data-reveal>
+      <p class="eyebrow">Modalidades</p>
+      <h2 id="modalidades-title">Dois caminhos para treinar na RIP.</h2>
+    </header>
+
+    <div class="modalities__grid">
+      {
+        modalities.map((m, i) => (
+          <article class={`modality ${i % 2 ? 'modality--offset' : ''}`} id={m.id} data-reveal>
+            <div class="frame modality__frame">
+              <Photo id={m.photo} sizes="(min-width: 1024px) 40vw, (min-width: 600px) 46vw, 92vw" />
+            </div>
+            <div class="modality__body">
+              <h3>{m.title}</h3>
+              <p>{m.text}</p>
+              <WhatsAppLink intent={m.intent} placement={`modalidade_${m.id}`} ctaId={`modalidade_${m.id}`} variant="ghost" icon="arrow">
+                {m.cta}
+              </WhatsAppLink>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <div class="moments" data-reveal>
+      <div class="moments__intro">
+        <h3>Em que momento você está?</h3>
+        <p>Escolha uma opção e a mensagem para a equipe já vai pronta no WhatsApp. Não pedimos dados de saúde, peso ou medidas.</p>
+      </div>
+      <ul class="moments__list">
+        {
+          moments.map((m) => (
+            <li>
+              <WhatsAppLink intent={m.intent} placement="momento" ctaId={`momento_${m.intent}`} variant="plain" icon="none" class="moment">
+                <span class="moment__title">{m.title}</span>
+                <span class="moment__text">{m.text}</span>
+                <span class="moment__go" aria-hidden="true">
+                  Conversar
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </span>
+              </WhatsAppLink>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .modalities {
+    background: var(--surface);
+  }
+  .modalities__head {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 720px;
+    margin-bottom: clamp(32px, 5vw, 56px);
+  }
+  .modalities__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(20px, 4vw, 56px);
+    align-items: start;
+  }
+  .modality {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .modality--offset {
+    margin-top: clamp(0px, 8vw, 96px);
+  }
+  .modality__frame {
+    aspect-ratio: 4 / 5;
+  }
+  .modality__frame :global(img) {
+    height: 100%;
+  }
+  .modality__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .modality__body h3 {
+    font-size: clamp(2rem, 1.4rem + 2vw, 2.8rem);
+  }
+  .modality__body p {
+    color: var(--muted);
+    max-width: 44ch;
+    margin-bottom: 6px;
+  }
+
+  .moments {
+    margin-top: clamp(48px, 7vw, 88px);
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: clamp(20px, 4vw, 56px);
+    padding-top: clamp(28px, 4vw, 40px);
+    border-top: 1px solid var(--line);
+  }
+  .moments__intro h3 {
+    font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.2rem);
+  }
+  .moments__intro p {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 0.98rem;
+  }
+  .moments__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .moments__list li {
+    display: flex;
+  }
+  .moments__list :global(.moment) {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px;
+    min-height: 100%;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface-elevated);
+    text-decoration: none;
+    transition:
+      border-color 0.2s var(--ease),
+      transform 0.2s var(--ease),
+      background-color 0.2s var(--ease);
+  }
+  .moments__list :global(.moment > span:first-of-type) {
+    display: contents;
+  }
+  .moments__list :global(.moment:hover),
+  .moments__list :global(.moment:focus-visible) {
+    border-color: var(--action-red);
+    transform: translateY(-2px);
+  }
+  .moment__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.45rem;
+    text-transform: uppercase;
+    line-height: 1.05;
+  }
+  .moment__text {
+    color: var(--muted);
+    font-size: 0.95rem;
+    flex: 1;
+  }
+  .moment__go {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    font-weight: 650;
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+  .moment__go::before {
+    content: '';
+    width: 14px;
+    height: 3px;
+    background: var(--brand-red);
+    transform: skewX(-35deg);
+  }
+
+  @media (max-width: 1023px) {
+    .moments {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 767px) {
+    .modalities__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .modality--offset {
+      margin-top: 16px;
+    }
+    .modality__frame {
+      aspect-ratio: 4 / 3.6;
+    }
+    .moments__list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

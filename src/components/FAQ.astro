@@ -1,0 +1,126 @@
+---
+import { faq } from '../data/faq';
+import Icon from './Icon.astro';
+---
+
+<section class="section faq" id="perguntas" aria-labelledby="faq-title">
+  <div class="container faq__grid">
+    <div class="faq__head" data-reveal>
+      <p class="eyebrow">Perguntas frequentes</p>
+      <h2 id="faq-title">Antes de vir, tire suas dúvidas.</h2>
+    </div>
+    <div class="faq__list" data-reveal>
+      {
+        faq.map((item) => (
+          <details class="faq__item" data-faq-id={item.id}>
+            <summary>
+              <span>{item.question}</span>
+              <Icon name="plus" class="faq__icon" />
+            </summary>
+            <div class="faq__answer">
+              <p>{item.answer}</p>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  import { track } from '../lib/analytics';
+  // Um evento por expansão (o fechamento não conta).
+  document.querySelectorAll<HTMLDetailsElement>('[data-faq-id]').forEach((el) => {
+    el.addEventListener('toggle', () => {
+      if (el.open) track('faq_open', { question_id: el.dataset.faqId ?? 'unknown' });
+    });
+  });
+</script>
+
+<style>
+  .faq {
+    background: var(--background);
+  }
+  .faq__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: clamp(28px, 5vw, 80px);
+    align-items: start;
+  }
+  .faq__head {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: sticky;
+    top: calc(var(--header-h) + 32px);
+  }
+  .faq__list {
+    border-top: 1px solid var(--line);
+  }
+  .faq__item {
+    border-bottom: 1px solid var(--line);
+    interpolate-size: allow-keywords;
+  }
+  .faq__item summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    min-height: 64px;
+    padding: 16px 0;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.08rem;
+    border-radius: 2px;
+  }
+  .faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq__item summary:hover {
+    color: #fff;
+  }
+  .faq__item :global(.faq__icon) {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    color: var(--brand-red);
+    transition: transform 0.3s var(--ease);
+  }
+  /* Estado expandido claramente identificado: ícone gira para "×" e a pergunta ganha a barra vermelha. */
+  .faq__item[open] :global(.faq__icon) {
+    transform: rotate(45deg);
+  }
+  .faq__item[open] summary {
+    box-shadow: inset 3px 0 0 var(--brand-red);
+    padding-left: 14px;
+  }
+  .faq__answer {
+    padding: 0 0 20px 14px;
+    color: #cfcfd6;
+    max-width: 62ch;
+  }
+  /* Transição suave onde houver suporte (melhoria progressiva). */
+  .faq__item::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size 0.3s var(--ease),
+      content-visibility 0.3s allow-discrete;
+  }
+  .faq__item[open]::details-content {
+    block-size: auto;
+  }
+  .faq__item summary {
+    transition: padding-left 0.25s var(--ease);
+  }
+
+  @media (max-width: 1023px) {
+    .faq__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .faq__head {
+      position: static;
+    }
+  }
+</style>

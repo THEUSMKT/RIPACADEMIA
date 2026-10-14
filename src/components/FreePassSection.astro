@@ -1,0 +1,161 @@
+---
+import Photo from './Photo.astro';
+import WhatsAppLink from './WhatsAppLink.astro';
+
+const steps = [
+  { title: 'Converse com a equipe', text: 'Envie uma mensagem pelo WhatsApp.' },
+  { title: 'Consulte as condições e combine um horário', text: 'Confirme como funciona o Free Pass.' },
+  { title: 'Conheça a RIP', text: 'Visite o espaço no horário combinado.' },
+];
+---
+
+<section class="section freepass" id="free-pass" aria-labelledby="freepass-title">
+  <div class="container">
+    <div class="freepass__panel" data-reveal>
+      <div class="freepass__media">
+        <div class="frame freepass__frame">
+          <Photo id="aperto-de-maos" sizes="(min-width: 1024px) 38vw, 92vw" />
+        </div>
+      </div>
+      <div class="freepass__body">
+        <p class="freepass__kicker">Free Pass</p>
+        <h2 id="freepass-title">Seu primeiro passo pode ser conhecer a RIP.</h2>
+        <ol class="freepass__steps">
+          {
+            steps.map((s, i) => (
+              <li>
+                <span class="freepass__n" aria-hidden="true">
+                  {i + 1}
+                </span>
+                <div>
+                  <strong>{s.title}</strong>
+                  <span>{s.text}</span>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+        <div class="freepass__actions">
+          <WhatsAppLink intent="free_pass" placement="free_pass_bloco" ctaId="freepass_agendar" class="btn--light">
+            Quero agendar meu Free Pass
+          </WhatsAppLink>
+          <p class="freepass__micro">A equipe orienta você sobre disponibilidade e condições.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .freepass {
+    background: var(--surface);
+    padding-top: 0;
+  }
+  .freepass__panel {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(24px, 4vw, 64px);
+    align-items: center;
+    padding: clamp(20px, 4vw, 56px);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    isolation: isolate;
+    /* Continuidade estática com a onda do hero: vermelho escuro com faixa diagonal. */
+    background:
+      linear-gradient(115deg, transparent 58%, rgb(255 255 255 / 0.06) 58.2%, rgb(255 255 255 / 0.06) 66%, transparent 66.2%),
+      linear-gradient(135deg, #a10912 0%, #b90a14 45%, #c80b16 100%);
+  }
+  .freepass__frame {
+    aspect-ratio: 4 / 5;
+    box-shadow: 0 24px 48px -24px rgb(0 0 0 / 0.6);
+  }
+  .freepass__frame :global(img) {
+    height: 100%;
+  }
+  .freepass__body {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    color: #fff;
+  }
+  .freepass__kicker {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 1rem;
+  }
+  .freepass__body h2 {
+    font-size: clamp(2.2rem, 1.3rem + 3.6vw, 4rem);
+  }
+  .freepass__steps {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+    counter-reset: step;
+  }
+  .freepass__steps li {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    gap: 14px;
+    align-items: start;
+    padding: 14px 0;
+    border-top: 1px solid rgb(255 255 255 / 0.22);
+  }
+  .freepass__n {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 2.6rem;
+    line-height: 0.9;
+  }
+  .freepass__steps strong {
+    display: block;
+    font-weight: 650;
+    font-size: 1.08rem;
+  }
+  .freepass__steps span {
+    display: block;
+    margin-top: 2px;
+  }
+  .freepass__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .freepass__micro {
+    font-size: 0.95rem;
+  }
+  .freepass :global(.btn--light) {
+    --btn-bg: #fff;
+    --btn-fg: var(--ink);
+    padding-inline: 28px;
+  }
+  .freepass :global(.btn--light:hover),
+  .freepass :global(.btn--light:focus-visible) {
+    --btn-bg: #f0eeea;
+  }
+  .freepass :global(:focus-visible) {
+    outline-color: #fff;
+  }
+
+  @media (max-width: 1023px) {
+    .freepass__panel {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .freepass__media {
+      order: 2;
+    }
+    .freepass__frame {
+      aspect-ratio: 16 / 11;
+    }
+  }
+  @media (max-width: 599px) {
+    .freepass :global(.btn--light) {
+      width: 100%;
+    }
+  }
+</style>

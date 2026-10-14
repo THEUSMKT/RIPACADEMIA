@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import StructureSection from '../components/StructureSection.astro';
+import ModalitiesSection from '../components/ModalitiesSection.astro';
+import FreePassSection from '../components/FreePassSection.astro';
+import BenefitsSection from '../components/BenefitsSection.astro';
+import HistorySection from '../components/HistorySection.astro';
+import Gallery from '../components/Gallery.astro';
+import LocationSection from '../components/LocationSection.astro';
+import FAQ from '../components/FAQ.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+import Footer from '../components/Footer.astro';
+import MobileConversionBar from '../components/MobileConversionBar.astro';
+import manifest from '../data/images.json';
+import { withBase } from '../lib/paths';
+
+const hero = manifest.photos['corredor-central'];
+const heroSrcset = hero.variants.avif.map((v) => `${withBase(v.file)} ${v.w}w`).join(', ');
+---
+
+<BaseLayout
+  title="RIP Academia na Feitoria | Musculação e CrossTraining em São Leopoldo"
+  description="Conheça a RIP Academia na Feitoria, São Leopoldo. Veja a estrutura, os horários, Wellhub e TotalPass e converse com a equipe sobre o Free Pass."
+  jsonLd
+>
+  <link
+    slot="head"
+    rel="preload"
+    as="image"
+    type="image/avif"
+    imagesrcset={heroSrcset}
+    imagesizes="(min-width: 1280px) 560px, (min-width: 1024px) 44vw, 100vw"
+    fetchpriority="high"
+  />
+  <Header />
+  <main id="conteudo" tabindex="-1">
+    <Hero />
+    <StructureSection />
+    <ModalitiesSection />
+    <FreePassSection />
+    <BenefitsSection />
+    <HistorySection />
+    <Gallery />
+    <LocationSection />
+    <FAQ />
+    <FinalCTA />
+  </main>
+  <Footer />
+  <MobileConversionBar />
+</BaseLayout>

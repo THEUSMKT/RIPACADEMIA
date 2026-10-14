@@ -1,0 +1,180 @@
+---
+import { business, formatRange, mapsUrl } from '../data/business';
+import Icon from './Icon.astro';
+import Photo from './Photo.astro';
+import WhatsAppLink from './WhatsAppLink.astro';
+
+const { address } = business;
+---
+
+<section class="section location light" id="localizacao" aria-labelledby="localizacao-title">
+  <div class="container location__grid">
+    <div class="location__copy" data-reveal>
+      <p class="eyebrow">Localização e horários</p>
+      <h2 id="localizacao-title">Na Av. Feitoria, em São Leopoldo.</h2>
+
+      <address class="location__address">
+        <span class="location__label">Endereço</span>
+        <span class="location__value">
+          {address.streetAddress}<br />
+          {address.neighborhood}, {address.addressLocality}/{address.addressRegion}
+        </span>
+      </address>
+
+      <div class="location__hours">
+        <table>
+          <caption class="location__label">Horário de funcionamento</caption>
+          <thead class="sr-only">
+            <tr>
+              <th scope="col">Período</th>
+              <th scope="col">Funcionamento</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              business.hours.map((h) => (
+                <tr>
+                  <th scope="row">{h.label}</th>
+                  <td>{formatRange(h.opens, h.closes)}</td>
+                </tr>
+              ))
+            }
+            <tr>
+              <th scope="row">{business.unspecifiedHours.label}</th>
+              <td>{business.unspecifiedHours.value}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="location__actions">
+        <a class="btn" href={mapsUrl} target="_blank" rel="noopener noreferrer" data-track="directions" data-placement="localizacao">
+          <Icon name="map" />
+          <span>Como chegar</span>
+          <span class="sr-only"> (abre o Google Maps em nova aba)</span>
+        </a>
+        <WhatsAppLink intent="plans" placement="localizacao" ctaId="localizacao_falar" variant="ghost">
+          Falar com a academia
+        </WhatsAppLink>
+      </div>
+      <p class="location__phone">
+        WhatsApp e telefone:
+        <a class="text-link" href={`tel:${business.phoneE164}`}>{business.whatsappDisplay}</a>
+      </p>
+    </div>
+
+    <figure class="location__media" data-reveal>
+      <div class="frame location__frame">
+        <Photo id="fachada-vista-da-rua" sizes="(min-width: 1024px) 46vw, 92vw" />
+      </div>
+      <figcaption>Fachada da RIP Academia, {address.streetAddress}.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  /* Seção clara: transição em diagonal (motivo da logo, uso 3 de 3). */
+  .location {
+    background: var(--light-section);
+    color: var(--ink);
+    clip-path: polygon(0 clamp(20px, 4vw, 56px), 100% 0, 100% 100%, 0 100%);
+    margin-top: calc(-1 * clamp(20px, 4vw, 56px));
+    padding-top: calc(var(--section-y) + clamp(20px, 4vw, 56px));
+  }
+  .location__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    gap: clamp(32px, 5vw, 80px);
+    align-items: center;
+  }
+  .location__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+  .location__copy h2 {
+    color: var(--ink);
+  }
+  .location__label {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+    text-align: left;
+    margin-bottom: 8px;
+  }
+  .location__address {
+    font-style: normal;
+  }
+  .location__value {
+    display: block;
+    font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+    font-weight: 600;
+    line-height: 1.35;
+    user-select: text;
+  }
+  .location__hours table {
+    width: 100%;
+    max-width: 520px;
+    border-collapse: collapse;
+  }
+  .location__hours th,
+  .location__hours td {
+    padding: 13px 0;
+    border-bottom: 1px solid rgb(23 23 26 / 0.14);
+    text-align: left;
+    font-size: 1.05rem;
+  }
+  .location__hours tbody tr:first-child th,
+  .location__hours tbody tr:first-child td {
+    border-top: 1px solid rgb(23 23 26 / 0.14);
+  }
+  .location__hours th {
+    font-weight: 500;
+  }
+  .location__hours td {
+    text-align: right;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .location__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .location__phone {
+    color: var(--ink-muted);
+  }
+  .location__phone a {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .location__media {
+    margin: 0;
+  }
+  .location__frame {
+    aspect-ratio: 1054 / 1000;
+  }
+  .location__frame :global(img) {
+    height: 100%;
+  }
+  .location__media figcaption {
+    margin-top: 10px;
+    font-size: 0.88rem;
+    color: var(--ink-muted);
+  }
+
+  @media (max-width: 1023px) {
+    .location__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 599px) {
+    .location__actions .btn {
+      width: 100%;
+    }
+  }
+</style>
