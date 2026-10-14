@@ -58,10 +58,16 @@ const facts = [
     </figure>
   </div>
 
-  <button type="button" class="hero__motion" data-motion-toggle aria-pressed="false" hidden>
+  <button
+    type="button"
+    class="hero__motion"
+    data-motion-toggle
+    aria-pressed="false"
+    aria-label="Pausar movimento"
+    hidden
+  >
     <Icon name="pause" class="icon-pause" />
     <Icon name="play" class="icon-play" />
-    <span data-motion-label>Pausar movimento</span>
   </button>
 </section>
 
@@ -76,10 +82,9 @@ const facts = [
   const hero = document.querySelector<HTMLElement>('[data-hero]');
   const canvas = document.querySelector<HTMLCanvasElement>('[data-wave-canvas]');
   const button = document.querySelector<HTMLButtonElement>('[data-motion-toggle]');
-  const label = document.querySelector<HTMLElement>('[data-motion-label]');
   const PAUSE_KEY = 'rip-motion-paused';
 
-  if (hero && canvas && button && label) {
+  if (hero && canvas && button) {
     const mqDesktop = window.matchMedia('(min-width: 1024px)');
     const mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -104,7 +109,7 @@ const facts = [
       hero.dataset.wave = ctrl && eligible() ? 'live' : 'static';
       button.hidden = !(ready && eligible() && ctrl);
       button.setAttribute('aria-pressed', String(userPaused));
-      label.textContent = userPaused ? 'Retomar movimento' : 'Pausar movimento';
+      button.setAttribute('aria-label', userPaused ? 'Retomar movimento' : 'Pausar movimento');
     };
 
     const fail = () => {
@@ -328,30 +333,36 @@ const facts = [
     }
   }
 
+  /* Controle discreto, só ícone, no canto inferior direito (longe dos CTAs). Alvo de toque 48 × 48. */
   .hero__motion {
     position: absolute;
     z-index: 2;
     right: var(--gutter);
     bottom: 14px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 44px;
-    padding: 0 14px;
-    font-size: 0.85rem;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
     color: var(--muted);
-    background: rgb(21 21 24 / 0.7);
+    background: rgb(9 9 11 / 0.45);
     border: 1px solid var(--line);
-    border-radius: 999px;
+    border-radius: 50%;
     cursor: pointer;
+    transition:
+      color 0.2s var(--ease),
+      border-color 0.2s var(--ease),
+      background-color 0.2s var(--ease);
   }
   .hero__motion svg {
     width: 16px;
     height: 16px;
   }
-  .hero__motion:hover {
+  .hero__motion:hover,
+  .hero__motion:focus-visible {
     color: var(--text);
     border-color: var(--line-strong);
+    background: rgb(9 9 11 / 0.7);
   }
   .hero__motion .icon-play,
   .hero__motion[aria-pressed='true'] .icon-pause {

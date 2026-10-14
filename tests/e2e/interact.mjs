@@ -50,8 +50,9 @@ const rafCounter = () => {
   await btn.click();
   await page.waitForTimeout(300);
   a = await count(); await page.waitForTimeout(1000); b = await count();
-  ok('pausar suspende o loop', b - a === 0, `${b - a} rAF/s; label=${await btn.innerText()}`);
+  ok('pausar suspende o loop', b - a === 0, `${b - a} rAF/s; label=${await btn.getAttribute('aria-label')}`);
   ok('aria-pressed=true quando pausado', (await btn.getAttribute('aria-pressed')) === 'true');
+  ok('aria-label "Retomar movimento" quando pausado', (await btn.getAttribute('aria-label')) === 'Retomar movimento');
   await btn.click();
   await page.waitForTimeout(300);
   a = await count(); await page.waitForTimeout(1000); b = await count();
