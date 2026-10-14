@@ -1,0 +1,47 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Install, build (astro check + build + verify-dist) and upload
+        uses: withastro/action@v6
+        with:
+          node-version: 24
+        env:
+          # Ative a mensuração em Settings → Secrets and variables → Actions → Variables.
+          # Variáveis vazias mantêm GA4, GTM e Pixel desligados (sem aviso de consentimento).
+          PUBLIC_GA4_ID: ${{ vars.PUBLIC_GA4_ID }}
+          PUBLIC_GTM_ID: ${{ vars.PUBLIC_GTM_ID }}
+          PUBLIC_META_PIXEL_ID: ${{ vars.PUBLIC_META_PIXEL_ID }}
+          PUBLIC_MAPS_URL: ${{ vars.PUBLIC_MAPS_URL }}
+          # Domínio próprio: defina SITE_URL (ex.: https://www.exemplo.com.br) e BASE_PATH=/
+          SITE_URL: ${{ vars.SITE_URL }}
+          BASE_PATH: ${{ vars.BASE_PATH }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
