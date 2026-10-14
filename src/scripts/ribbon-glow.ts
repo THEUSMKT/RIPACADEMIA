@@ -3,12 +3,14 @@
  *
  * Baseado em "Ribbon Glow 2 — Originkit" (RipAcademia-Base-ClaudeCode/animacoes/RibbonGlow-referencia.tsx),
  * fornecido pelo usuário. Shaders de campo e acabamento preservados; mudanças documentadas no README:
- *  - módulo TypeScript nativo (sem React), carregado sob demanda só no desktop;
+ *  - módulo TypeScript nativo (sem React), carregado sob demanda (desktop e mobile) pelo controlador
+ *    src/scripts/wave-controller.ts, que gerencia uma instância por seção (hero e convite);
  *  - sem minWidth 1200 / minHeight 800: o canvas segue o tamanho real do hero;
  *  - loop só existe entre start() e stop() (visibilidade, aba oculta, pausa e movimento reduzido ficam no controlador);
  *  - limite de DPR e de quadros por segundo configuráveis; LAYERS vira parâmetro de geração do shader;
- *  - ponteiro lido no elemento host (o hero), nunca na janela inteira, e só se `pointer` for verdadeiro;
- *  - deslocamento `offset` para posicionar a faixa na composição;
+ *  - ponteiro lido no elemento host (a seção), nunca na janela inteira, e só se `pointer` for verdadeiro;
+ *  - deslocamento `offset` para posicionar a faixa na composição; offset e size ajustáveis depois da criação
+ *    (setPlacement), para mudar a composição entre telas largas e estreitas sem recriar o renderer;
  *  - falhas (WebGL2 ausente, compilação, framebuffer incompleto, perda de contexto) devolvem null / chamam onFail
  *    sem mensagens para o visitante, liberando o que já tinha sido criado.
  */
@@ -155,6 +157,8 @@ export interface RibbonGlowController {
   start(): void;
   stop(): void;
   destroy(): void;
+  /** Reposiciona e redimensiona a faixa (ex.: mudança de breakpoint); vale a partir do próximo quadro. */
+  setPlacement(offset: [number, number], size: number): void;
 }
 
 /**
@@ -336,11 +340,12 @@ export async function createRibbonGlow(
   const bg = hex(opts.background);
   const bgLum = 0.2126 * bg[0] + 0.7152 * bg[1] + 0.0722 * bg[2];
   const speed = clampN(opts.speed, 0, 100) / 50;
-  const size = clampN(opts.size, 50, 200) / 100;
+  let size = clampN(opts.size, 50, 200) / 100;
   const angle = (clampN(opts.angle, -180, 180) * Math.PI) / 180;
   const hover = clampN(opts.hover, 0, 200) / 100;
   const reach = clampN(opts.reach, 10, 800);
   const frameInterval = 1000 / Math.max(1, opts.fps);
+  let offset: [number, number] = [opts.offset[0], opts.offset[1]];
 
   let mx = 0;
   let my = 0;
@@ -394,7 +399,7 @@ export async function createRibbonGlow(
     g.uniform1f(uf.uOn, on * hover);
     g.uniform1f(uf.uReach, reach / ch);
     g.uniform2f(uf.uVel, (vx / ch) * vCap, (-vy / ch) * vCap);
-    g.uniform2f(uf.uOffset, opts.offset[0], opts.offset[1]);
+    g.uniform2f(uf.uOffset, offset[0], offset[1]);
     g.drawArrays(g.TRIANGLES, 0, 3);
 
     g.bindFramebuffer(g.FRAMEBUFFER, null);
@@ -454,5 +459,10 @@ export async function createRibbonGlow(
   };
   canvas.addEventListener('webglcontextlost', onLost);
 
-  return { start, stop, destroy };
+  const setPlacement = (o: [number, number], s: number) => {
+    offset = [o[0], o[1]];
+    size = clampN(s, 50, 200) / 100;
+  };
+
+  return { start, stop, destroy, setPlacement };
 }

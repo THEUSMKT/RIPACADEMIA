@@ -274,32 +274,37 @@ p {
   --btn-border: rgb(23 23 26 / 0.5);
 }
 
-/* Corte diagonal da moldura (motivo da logo, uso 1 de 3). */
+/*
+ * Moldura de foto. Regra do site: toda foto e arte aparece inteira, na proporção original.
+ * Sem recorte (object-fit: cover), sem cantos cortados (clip-path), sem cantos arredondados sobre a
+ * imagem e sem zoom. A altura vem da proporção da imagem (width/height do <img>).
+ */
 .frame {
   position: relative;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
   background: var(--surface);
-  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
 }
 
 .frame img {
   width: 100%;
+  height: auto;
+}
+
+/*
+ * Caixas iguais (quando o layout pede): a imagem cabe inteira na caixa com object-fit: contain
+ * e o espaço que sobrar fica no fundo discreto da moldura. A caixa recebe aspect-ratio no componente.
+ */
+.frame--contain img {
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s var(--ease);
+  object-fit: contain;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .frame:hover img,
-  a:hover .frame img,
-  button:hover .frame img {
-    transform: scale(1.025);
-  }
-}
-
-.frame--cut-left {
-  clip-path: polygon(var(--cut) 0, 100% 0, 100% 100%, 0 100%, 0 var(--cut));
+/*
+ * Fotos verticais: a largura é limitada para que a altura não passe de --fit-h.
+ * A imagem continua inteira; só fica menor. Requer --ratio (src/lib/images.ts → ratioVar).
+ */
+.frame--fit {
+  --fit-h: min(78vh, 720px);
+  width: min(100%, calc(var(--fit-h) * var(--ratio, 1)));
 }
 
 /* ---------- Revelação ao rolar (a classe só é aplicada pelo script; sem JS o conteúdo fica visível) ---------- */

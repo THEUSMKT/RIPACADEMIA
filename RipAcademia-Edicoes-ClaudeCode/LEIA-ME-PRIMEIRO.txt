@@ -1,0 +1,11 @@
+RIP ACADEMIA — PACOTE DE EDIÇÕES
+
+1. Extraia este ZIP e coloque a pasta junto ao projeto do site.
+2. Abra o Claude Code no projeto existente.
+3. Envie esta instrução ao Claude Code:
+
+Leia PROMPT-EDICOES-RIP-ACADEMIA.md na pasta RipAcademia-Edicoes-ClaudeCode. Examine as oito imagens em imagens/ e o código animacao/RibbonGlow-referencia.tsx. Aplique todos os sete ajustes ao site existente e valide o resultado conforme o prompt.
+
+O prompt é completo para estas edições e não exige acesso ao prompt original. As imagens estão dentro do ZIP, não apenas referenciadas. Os fontes das artes Wellhub e TotalPass ainda têm endereço antigo; o prompt inclui a correção localizada antes da publicação.
+
+Este pacote contém instruções e assets. A implementação será feita no seu projeto pelo Claude Code.

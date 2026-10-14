@@ -1,6 +1,7 @@
 ---
 import type { Intent } from '../lib/whatsapp';
 import type { PhotoId } from '../data/photos';
+import { ratioVar } from '../lib/images';
 import Photo from './Photo.astro';
 import WhatsAppLink from './WhatsAppLink.astro';
 
@@ -20,7 +21,7 @@ const modalities: { id: string; title: string; text: string; cta: string; intent
     text: 'Conheça a proposta de CrossTraining e consulte a equipe sobre turmas e horários.',
     cta: 'Saber sobre o CrossTraining',
     intent: 'cross_training',
-    photo: 'exercicios-no-chao',
+    photo: 'crosstraining',
     caption: 'Exercícios no chão com bola medicinal e peso',
   },
 ];
@@ -43,8 +44,8 @@ const moments: { intent: Intent; title: string; text: string }[] = [
       {
         modalities.map((m, i) => (
           <article class={`modality ${i % 2 ? 'modality--offset' : ''}`} id={m.id} data-reveal>
-            <div class="frame modality__frame">
-              <Photo id={m.photo} sizes="(min-width: 1024px) 40vw, (min-width: 600px) 46vw, 92vw" />
+            <div class="frame frame--fit modality__frame" style={ratioVar(m.photo)}>
+              <Photo id={m.photo} sizes="(min-width: 1024px) 480px, (min-width: 768px) 46vw, 92vw" />
             </div>
             <div class="modality__body">
               <h3>{m.title}</h3>
@@ -107,14 +108,9 @@ const moments: { intent: Intent; title: string; text: string }[] = [
     flex-direction: column;
     gap: 22px;
   }
-  .modality--offset {
-    margin-top: clamp(0px, 8vw, 96px);
-  }
+  /* Mesma altura máxima para as duas fotos: cada uma mantém a própria proporção, inteira. */
   .modality__frame {
-    aspect-ratio: 4 / 5;
-  }
-  .modality__frame :global(img) {
-    height: 100%;
+    --fit-h: min(76vh, 640px);
   }
   .modality__body {
     display: flex;
@@ -224,7 +220,7 @@ const moments: { intent: Intent; title: string; text: string }[] = [
       margin-top: 16px;
     }
     .modality__frame {
-      aspect-ratio: 4 / 3.6;
+      --fit-h: min(72vh, 600px);
     }
     .moments__list {
       grid-template-columns: minmax(0, 1fr);

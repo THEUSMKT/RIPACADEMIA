@@ -1,4 +1,5 @@
 ---
+import { ratioVar } from '../lib/images';
 import Photo from './Photo.astro';
 import WhatsAppLink from './WhatsAppLink.astro';
 
@@ -13,8 +14,8 @@ const steps = [
   <div class="container">
     <div class="freepass__panel" data-reveal>
       <div class="freepass__media">
-        <div class="frame freepass__frame">
-          <Photo id="aperto-de-maos" sizes="(min-width: 1024px) 38vw, 92vw" />
+        <div class="frame frame--fit freepass__frame" style={ratioVar('aperto-de-maos')}>
+          <Photo id="aperto-de-maos" sizes="(min-width: 1024px) 300px, 280px" />
         </div>
       </div>
       <div class="freepass__body">
@@ -67,11 +68,9 @@ const steps = [
       linear-gradient(135deg, #a10912 0%, #b90a14 45%, #c80b16 100%);
   }
   .freepass__frame {
-    aspect-ratio: 4 / 5;
+    --fit-h: min(70vh, 640px);
+    margin-inline: auto;
     box-shadow: 0 24px 48px -24px rgb(0 0 0 / 0.6);
-  }
-  .freepass__frame :global(img) {
-    height: 100%;
   }
   .freepass__body {
     display: flex;
@@ -150,7 +149,7 @@ const steps = [
       order: 2;
     }
     .freepass__frame {
-      aspect-ratio: 16 / 11;
+      --fit-h: min(64vh, 560px);
     }
   }
   @media (max-width: 599px) {

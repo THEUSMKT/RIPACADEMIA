@@ -1,0 +1,145 @@
+---
+/**
+ * Convite "Venha fazer parte desse time!" (substitui a antiga galeria).
+ * Fundo preto com a onda Ribbon Glow, título grande com entrada palavra a palavra e a foto inteira.
+ */
+import { ratioVar } from '../lib/images';
+import MotionToggle from './MotionToggle.astro';
+import Photo from './Photo.astro';
+import WaveBackground from './WaveBackground.astro';
+
+const title = 'Venha fazer parte desse time!';
+// Palavras animadas uma a uma; as duas últimas ("desse time!") ficam em vermelho, com traço desenhado ao final.
+const lead = ['Venha', 'fazer', 'parte'];
+const accent = ['desse', 'time!'];
+---
+
+<section class="section invite" id="convite" data-wave-host aria-labelledby="convite-title">
+  <WaveBackground id="convite-wave" variant="convite" offsetWide={[0.05, -0.05]} offsetNarrow={[0, 0.05]} />
+
+  <div class="container invite__inner">
+    <h2 id="convite-title" class="invite__title" data-reveal>
+      <span class="sr-only">{title}</span>
+      <span class="invite__words" aria-hidden="true">
+        {
+          lead.map((w, i) => (
+            <>
+              <span class="invite__word" style={`--i: ${i}`}>
+                {w}
+              </span>{' '}
+            </>
+          ))
+        }
+        <span class="invite__accent">
+          <span class="invite__word" style={`--i: ${lead.length}`}>
+            {accent[0]}
+          </span>{' '}
+          <span class="invite__word" style={`--i: ${lead.length + 1}`}>
+            {accent[1]}
+          </span>
+        </span>
+      </span>
+    </h2>
+
+    <figure class="invite__media" data-reveal>
+      <div class="frame frame--fit invite__frame" style={ratioVar('convite-time')}>
+        <Photo id="convite-time" sizes="(min-width: 1024px) 960px, 92vw" />
+      </div>
+    </figure>
+  </div>
+
+  <MotionToggle corner="top" />
+</section>
+
+<style>
+  .invite {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--background);
+    padding-block: clamp(64px, 9vw, 128px) clamp(80px, 10vw, 144px);
+  }
+  .invite__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(32px, 5vw, 64px);
+  }
+
+  /* Título: domina a hierarquia, centralizado, com quebras naturais entre palavras inteiras. */
+  .invite__title {
+    max-width: 19ch;
+    text-align: center;
+    font-size: clamp(2.7rem, 1rem + 7.4vw, 7rem);
+    line-height: 0.92;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  .invite__words {
+    display: block;
+  }
+  .invite__word {
+    display: inline-block;
+  }
+  .invite__accent {
+    position: relative;
+    display: inline-block;
+    white-space: nowrap;
+    color: var(--brand-red);
+  }
+  /* Traço vermelho sob "desse time!". */
+  .invite__accent::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0.1em;
+    bottom: -0.1em;
+    height: 0.075em;
+    background: var(--brand-red);
+    transform: skewX(-35deg);
+    transform-origin: left center;
+  }
+
+  /*
+   * Entrada (só com o script de revelação ativo; sem JS ou com movimento reduzido, o resultado final
+   * aparece direto): palavras em sequência a cada 80 ms, opacidade e deslocamento vertical moderado com
+   * desaceleração, e o traço desenhado ao final. Duração total ≈ 1,15 s. Uma única vez.
+   */
+  :global(.reveal-on) .invite__title[data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+  :global(.reveal-on) .invite__word {
+    opacity: 0;
+    transform: translateY(0.4em);
+    transition:
+      opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--i) * 80ms);
+  }
+  :global(.reveal-on) .invite__accent::after {
+    transform: skewX(-35deg) scaleX(0);
+    transition: transform 0.32s cubic-bezier(0.65, 0, 0.35, 1) 0.82s;
+  }
+  :global(.reveal-on) .invite__title:global(.is-in) .invite__word {
+    opacity: 1;
+    transform: none;
+  }
+  :global(.reveal-on) .invite__title:global(.is-in) .invite__accent::after {
+    transform: skewX(-35deg) scaleX(1);
+  }
+
+  /* Foto inteira e opaca, sem filtros; a onda aparece ao redor. */
+  .invite__media {
+    margin: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .invite__frame {
+    --fit-h: min(76vh, 720px);
+    box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.8);
+  }
+</style>

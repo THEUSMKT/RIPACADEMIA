@@ -1,0 +1,74 @@
+[
+  {
+    "arquivo": "imagens/01-fachada-rip.jpg",
+    "nome_original": "3728497D-BAC3-4359-94E6-3A2B823C68E2.jpeg",
+    "ajuste": 2,
+    "destino": "Fachada na segunda seção",
+    "largura_px": 1108,
+    "altura_px": 1420,
+    "sha256": "14dd24df53f07a046d2a6f79ab49d16c92f5b81fcc7aec95b555059fa7279920"
+  },
+  {
+    "arquivo": "imagens/02-estrutura-vista-geral.jpg",
+    "nome_original": "4815F1A0-BDA2-4A38-8C0E-22B3979E8011(2).jpeg",
+    "ajuste": 3,
+    "destino": "Foto esquerda do par da estrutura",
+    "largura_px": 1080,
+    "altura_px": 1456,
+    "sha256": "b920c650f918ec6dd00b6fd2e76e1253b8f9076f08a73bca50ab0e46fd57087f"
+  },
+  {
+    "arquivo": "imagens/03-estrutura-escada.jpg",
+    "nome_original": "B04F1AD7-6290-4B0B-8655-6457F1CA7C69(3).jpeg",
+    "ajuste": 3,
+    "destino": "Foto direita do par da estrutura",
+    "largura_px": 1080,
+    "altura_px": 1456,
+    "sha256": "c78ad58d7a73bd3d58f986338f9f457b0cef5856691aec30957d2a6beee06b9c"
+  },
+  {
+    "arquivo": "imagens/04-crosstraining.jpg",
+    "nome_original": "D6A994D7-FD93-49C6-B0AC-E68F317ECBAF.jpeg",
+    "ajuste": 4,
+    "destino": "CrossTraining, exibição integral",
+    "largura_px": 1080,
+    "altura_px": 1456,
+    "sha256": "6e9898a9e5b52a26f6ed0a2fde5554b6a3294e1e6e27b844f8856a9643a25ed6"
+  },
+  {
+    "arquivo": "imagens/05-wellhub-fonte.jpg",
+    "nome_original": "89E8C38A-DC0E-4DBC-8D5A-DB834B36FF2F.jpeg",
+    "ajuste": 5,
+    "destino": "Wellhub, corrigir endereço impresso antes da publicação",
+    "largura_px": 808,
+    "altura_px": 1536,
+    "sha256": "cc669154f17f5e9efcdab2fd274ba3efb0235c78421ecc593fed7b23e457034a"
+  },
+  {
+    "arquivo": "imagens/06-totalpass-fonte.jpg",
+    "nome_original": "C1C4B470-8002-4BD3-8B58-290FE61BD134.jpeg",
+    "ajuste": 5,
+    "destino": "TotalPass, corrigir endereço impresso antes da publicação",
+    "largura_px": 1093,
+    "altura_px": 1438,
+    "sha256": "dc8aaba0d3a34441d4281653f197c081975b188182e212261232c339ed74e5c4"
+  },
+  {
+    "arquivo": "imagens/07-convite-time.jpg",
+    "nome_original": "30D735E4-45DF-476A-99B3-9670137D8E54.jpeg",
+    "ajuste": 6,
+    "destino": "Convite Venha fazer parte desse time!",
+    "largura_px": 1448,
+    "altura_px": 1086,
+    "sha256": "ccd5be28dc3add02c583d92cee45acbd8fea132378d9094af6b39ddc3a23302b"
+  },
+  {
+    "arquivo": "imagens/08-encerramento-primeiro-passo.jpg",
+    "nome_original": "F41460BD-6C1E-421D-BDB8-43CBCD8E26E0.jpeg",
+    "ajuste": 7,
+    "destino": "Encerramento Sua melhor versão começa com o primeiro passo.",
+    "largura_px": 1080,
+    "altura_px": 1456,
+    "sha256": "b2a163754ffe395848b256b82fa2c585c13c602aa839f29a44375966b8daefe9"
+  }
+]

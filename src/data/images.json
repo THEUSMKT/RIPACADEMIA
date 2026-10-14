@@ -1,118 +1,118 @@
 {
   "photos": {
-    "corredor-central": {
-      "id": "corredor-central",
-      "source": "imagens-tratadas/ambiente/04-corredor-central.png",
-      "width": 853,
-      "height": 1260,
+    "fachada-rip": {
+      "id": "fachada-rip",
+      "source": "RipAcademia-Edicoes-ClaudeCode/imagens/01-fachada-rip.jpg",
+      "width": 1108,
+      "height": 1420,
       "variants": {
         "avif": [
           {
             "w": 480,
-            "file": "assets/images/corredor-central-480.avif"
+            "file": "assets/images/fachada-rip-480.avif"
           },
           {
             "w": 720,
-            "file": "assets/images/corredor-central-720.avif"
+            "file": "assets/images/fachada-rip-720.avif"
           },
           {
-            "w": 853,
-            "file": "assets/images/corredor-central-853.avif"
+            "w": 1108,
+            "file": "assets/images/fachada-rip-1108.avif"
           }
         ],
         "webp": [
           {
             "w": 480,
-            "file": "assets/images/corredor-central-480.webp"
+            "file": "assets/images/fachada-rip-480.webp"
           },
           {
             "w": 720,
-            "file": "assets/images/corredor-central-720.webp"
+            "file": "assets/images/fachada-rip-720.webp"
           },
           {
-            "w": 853,
-            "file": "assets/images/corredor-central-853.webp"
+            "w": 1108,
+            "file": "assets/images/fachada-rip-1108.webp"
           }
         ]
       }
     },
-    "visao-geral-entrada": {
-      "id": "visao-geral-entrada",
-      "source": "imagens-tratadas/ambiente/03-visao-geral-entrada.png",
-      "width": 853,
-      "height": 1400,
+    "estrutura-vista-geral": {
+      "id": "estrutura-vista-geral",
+      "source": "RipAcademia-Edicoes-ClaudeCode/imagens/02-estrutura-vista-geral.jpg",
+      "width": 1080,
+      "height": 1456,
       "variants": {
         "avif": [
           {
             "w": 480,
-            "file": "assets/images/visao-geral-entrada-480.avif"
+            "file": "assets/images/estrutura-vista-geral-480.avif"
           },
           {
             "w": 720,
-            "file": "assets/images/visao-geral-entrada-720.avif"
+            "file": "assets/images/estrutura-vista-geral-720.avif"
           },
           {
-            "w": 853,
-            "file": "assets/images/visao-geral-entrada-853.avif"
+            "w": 1080,
+            "file": "assets/images/estrutura-vista-geral-1080.avif"
           }
         ],
         "webp": [
           {
             "w": 480,
-            "file": "assets/images/visao-geral-entrada-480.webp"
+            "file": "assets/images/estrutura-vista-geral-480.webp"
           },
           {
             "w": 720,
-            "file": "assets/images/visao-geral-entrada-720.webp"
+            "file": "assets/images/estrutura-vista-geral-720.webp"
           },
           {
-            "w": 853,
-            "file": "assets/images/visao-geral-entrada-853.webp"
+            "w": 1080,
+            "file": "assets/images/estrutura-vista-geral-1080.webp"
           }
         ]
       }
     },
-    "escada-e-aparelhos": {
-      "id": "escada-e-aparelhos",
-      "source": "imagens-tratadas/ambiente/05-escada-e-aparelhos.png",
-      "width": 853,
-      "height": 1844,
+    "estrutura-escada": {
+      "id": "estrutura-escada",
+      "source": "RipAcademia-Edicoes-ClaudeCode/imagens/03-estrutura-escada.jpg",
+      "width": 1080,
+      "height": 1456,
       "variants": {
         "avif": [
           {
             "w": 480,
-            "file": "assets/images/escada-e-aparelhos-480.avif"
+            "file": "assets/images/estrutura-escada-480.avif"
           },
           {
             "w": 720,
-            "file": "assets/images/escada-e-aparelhos-720.avif"
+            "file": "assets/images/estrutura-escada-720.avif"
           },
           {
-            "w": 853,
-            "file": "assets/images/escada-e-aparelhos-853.avif"
+            "w": 1080,
+            "file": "assets/images/estrutura-escada-1080.avif"
           }
         ],
         "webp": [
           {
             "w": 480,
-            "file": "assets/images/escada-e-aparelhos-480.webp"
+            "file": "assets/images/estrutura-escada-480.webp"
           },
           {
             "w": 720,
-            "file": "assets/images/escada-e-aparelhos-720.webp"
+            "file": "assets/images/estrutura-escada-720.webp"
           },
           {
-            "w": 853,
-            "file": "assets/images/escada-e-aparelhos-853.webp"
+            "w": 1080,
+            "file": "assets/images/estrutura-escada-1080.webp"
           }
         ]
       }
     },
     "aluno-aparelho-vermelho": {
       "id": "aluno-aparelho-vermelho",
-      "source": "imagens-tratadas/treinos/09-aluno-no-aparelho-vermelho.png",
+      "source": "RipAcademia-Base-ClaudeCode/imagens-tratadas/treinos/09-aluno-no-aparelho-vermelho.png",
       "width": 853,
-      "height": 1480,
+      "height": 1844,
       "variants": {
         "avif": [
           {
@@ -144,47 +144,47 @@
         ]
       }
     },
-    "exercicios-no-chao": {
-      "id": "exercicios-no-chao",
-      "source": "imagens-tratadas/funcional/19-exercicios-no-chao.png",
-      "width": 853,
-      "height": 1420,
+    "crosstraining": {
+      "id": "crosstraining",
+      "source": "RipAcademia-Edicoes-ClaudeCode/imagens/04-crosstraining.jpg",
+      "width": 1080,
+      "height": 1456,
       "variants": {
         "avif": [
           {
             "w": 480,
-            "file": "assets/images/exercicios-no-chao-480.avif"
+            "file": "assets/images/crosstraining-480.avif"
           },
           {
             "w": 720,
-            "file": "assets/images/exercicios-no-chao-720.avif"
+            "file": "assets/images/crosstraining-720.avif"
           },
           {
-            "w": 853,
-            "file": "assets/images/exercicios-no-chao-853.avif"
+            "w": 1080,
+            "file": "assets/images/crosstraining-1080.avif"
           }
         ],
         "webp": [
           {
             "w": 480,
-            "file": "assets/images/exercicios-no-chao-480.webp"
+            "file": "assets/images/crosstraining-480.webp"
           },
           {
             "w": 720,
-            "file": "assets/images/exercicios-no-chao-720.webp"
+            "file": "assets/images/crosstraining-720.webp"
           },
           {
-            "w": 853,
-            "file": "assets/images/exercicios-no-chao-853.webp"
+            "w": 1080,
+            "file": "assets/images/crosstraining-1080.webp"
           }
         ]
       }
     },
     "aperto-de-maos": {
       "id": "aperto-de-maos",
-      "source": "imagens-tratadas/conexao/22-aperto-de-maos.png",
+      "source": "RipAcademia-Base-ClaudeCode/imagens-tratadas/conexao/22-aperto-de-maos.png",
       "width": 853,
-      "height": 1400,
+      "height": 1844,
       "variants": {
         "avif": [
           {
@@ -218,9 +218,9 @@
     },
     "foto-de-grupo": {
       "id": "foto-de-grupo",
-      "source": "imagens-tratadas/equipe/06-foto-de-grupo.png",
+      "source": "RipAcademia-Base-ClaudeCode/imagens-tratadas/equipe/06-foto-de-grupo.png",
       "width": 941,
-      "height": 1300,
+      "height": 1672,
       "variants": {
         "avif": [
           {
@@ -252,290 +252,146 @@
         ]
       }
     },
-    "acompanhamento-no-aparelho": {
-      "id": "acompanhamento-no-aparelho",
-      "source": "imagens-tratadas/treinos/07-acompanhamento-no-aparelho.png",
-      "width": 853,
-      "height": 1500,
+    "arte-wellhub": {
+      "id": "arte-wellhub",
+      "source": "RipAcademia-Edicoes-ClaudeCode/imagens-corrigidas/05-wellhub-endereco-av-feitoria.png",
+      "width": 808,
+      "height": 1536,
       "variants": {
         "avif": [
           {
             "w": 480,
-            "file": "assets/images/acompanhamento-no-aparelho-480.avif"
+            "file": "assets/images/arte-wellhub-480.avif"
           },
           {
             "w": 720,
-            "file": "assets/images/acompanhamento-no-aparelho-720.avif"
+            "file": "assets/images/arte-wellhub-720.avif"
           },
           {
-            "w": 853,
-            "file": "assets/images/acompanhamento-no-aparelho-853.avif"
+            "w": 808,
+            "file": "assets/images/arte-wellhub-808.avif"
           }
         ],
         "webp": [
           {
             "w": 480,
-            "file": "assets/images/acompanhamento-no-aparelho-480.webp"
+            "file": "assets/images/arte-wellhub-480.webp"
           },
           {
             "w": 720,
-            "file": "assets/images/acompanhamento-no-aparelho-720.webp"
+            "file": "assets/images/arte-wellhub-720.webp"
           },
           {
-            "w": 853,
-            "file": "assets/images/acompanhamento-no-aparelho-853.webp"
+            "w": 808,
+            "file": "assets/images/arte-wellhub-808.webp"
           }
         ]
       }
     },
-    "fachada-vista-da-rua": {
-      "id": "fachada-vista-da-rua",
-      "source": "imagens-tratadas/fachada/01-fachada-vista-da-rua.png",
-      "width": 1054,
-      "height": 1000,
+    "arte-totalpass": {
+      "id": "arte-totalpass",
+      "source": "RipAcademia-Edicoes-ClaudeCode/imagens-corrigidas/06-totalpass-endereco-av-feitoria.png",
+      "width": 1093,
+      "height": 1438,
       "variants": {
         "avif": [
           {
             "w": 480,
-            "file": "assets/images/fachada-vista-da-rua-480.avif"
+            "file": "assets/images/arte-totalpass-480.avif"
           },
           {
             "w": 720,
-            "file": "assets/images/fachada-vista-da-rua-720.avif"
+            "file": "assets/images/arte-totalpass-720.avif"
           },
           {
-            "w": 1054,
-            "file": "assets/images/fachada-vista-da-rua-1054.avif"
+            "w": 1093,
+            "file": "assets/images/arte-totalpass-1093.avif"
           }
         ],
         "webp": [
           {
             "w": 480,
-            "file": "assets/images/fachada-vista-da-rua-480.webp"
+            "file": "assets/images/arte-totalpass-480.webp"
           },
           {
             "w": 720,
-            "file": "assets/images/fachada-vista-da-rua-720.webp"
+            "file": "assets/images/arte-totalpass-720.webp"
           },
           {
-            "w": 1054,
-            "file": "assets/images/fachada-vista-da-rua-1054.webp"
+            "w": 1093,
+            "file": "assets/images/arte-totalpass-1093.webp"
           }
         ]
       }
     },
-    "fachada-vista-aerea": {
-      "id": "fachada-vista-aerea",
-      "source": "imagens-tratadas/fachada/02-fachada-vista-aerea.png",
-      "width": 1135,
-      "height": 1386,
+    "convite-time": {
+      "id": "convite-time",
+      "source": "RipAcademia-Edicoes-ClaudeCode/imagens/07-convite-time.jpg",
+      "width": 1448,
+      "height": 1086,
       "variants": {
         "avif": [
           {
             "w": 480,
-            "file": "assets/images/fachada-vista-aerea-480.avif"
+            "file": "assets/images/convite-time-480.avif"
           },
           {
             "w": 720,
-            "file": "assets/images/fachada-vista-aerea-720.avif"
+            "file": "assets/images/convite-time-720.avif"
           },
           {
-            "w": 1135,
-            "file": "assets/images/fachada-vista-aerea-1135.avif"
+            "w": 1448,
+            "file": "assets/images/convite-time-1448.avif"
           }
         ],
         "webp": [
           {
             "w": 480,
-            "file": "assets/images/fachada-vista-aerea-480.webp"
+            "file": "assets/images/convite-time-480.webp"
           },
           {
             "w": 720,
-            "file": "assets/images/fachada-vista-aerea-720.webp"
+            "file": "assets/images/convite-time-720.webp"
           },
           {
-            "w": 1135,
-            "file": "assets/images/fachada-vista-aerea-1135.webp"
+            "w": 1448,
+            "file": "assets/images/convite-time-1448.webp"
           }
         ]
       }
     },
-    "colocacao-de-anilha": {
-      "id": "colocacao-de-anilha",
-      "source": "imagens-tratadas/treinos/12-colocacao-de-anilha.png",
-      "width": 853,
-      "height": 1844,
+    "encerramento-primeiro-passo": {
+      "id": "encerramento-primeiro-passo",
+      "source": "RipAcademia-Edicoes-ClaudeCode/imagens/08-encerramento-primeiro-passo.jpg",
+      "width": 1080,
+      "height": 1456,
       "variants": {
         "avif": [
           {
             "w": 480,
-            "file": "assets/images/colocacao-de-anilha-480.avif"
+            "file": "assets/images/encerramento-primeiro-passo-480.avif"
           },
           {
             "w": 720,
-            "file": "assets/images/colocacao-de-anilha-720.avif"
+            "file": "assets/images/encerramento-primeiro-passo-720.avif"
           },
           {
-            "w": 853,
-            "file": "assets/images/colocacao-de-anilha-853.avif"
+            "w": 1080,
+            "file": "assets/images/encerramento-primeiro-passo-1080.avif"
           }
         ],
         "webp": [
           {
             "w": 480,
-            "file": "assets/images/colocacao-de-anilha-480.webp"
+            "file": "assets/images/encerramento-primeiro-passo-480.webp"
           },
           {
             "w": 720,
-            "file": "assets/images/colocacao-de-anilha-720.webp"
+            "file": "assets/images/encerramento-primeiro-passo-720.webp"
           },
           {
-            "w": 853,
-            "file": "assets/images/colocacao-de-anilha-853.webp"
-          }
-        ]
-      }
-    },
-    "toque-de-punhos": {
-      "id": "toque-de-punhos",
-      "source": "imagens-tratadas/conexao/21-toque-de-punhos.png",
-      "width": 941,
-      "height": 1672,
-      "variants": {
-        "avif": [
-          {
-            "w": 480,
-            "file": "assets/images/toque-de-punhos-480.avif"
-          },
-          {
-            "w": 720,
-            "file": "assets/images/toque-de-punhos-720.avif"
-          },
-          {
-            "w": 941,
-            "file": "assets/images/toque-de-punhos-941.avif"
-          }
-        ],
-        "webp": [
-          {
-            "w": 480,
-            "file": "assets/images/toque-de-punhos-480.webp"
-          },
-          {
-            "w": 720,
-            "file": "assets/images/toque-de-punhos-720.webp"
-          },
-          {
-            "w": 941,
-            "file": "assets/images/toque-de-punhos-941.webp"
-          }
-        ]
-      }
-    },
-    "aluno-na-esteira": {
-      "id": "aluno-na-esteira",
-      "source": "imagens-tratadas/treinos/08-aluno-na-esteira.png",
-      "width": 853,
-      "height": 1844,
-      "variants": {
-        "avif": [
-          {
-            "w": 480,
-            "file": "assets/images/aluno-na-esteira-480.avif"
-          },
-          {
-            "w": 720,
-            "file": "assets/images/aluno-na-esteira-720.avif"
-          },
-          {
-            "w": 853,
-            "file": "assets/images/aluno-na-esteira-853.avif"
-          }
-        ],
-        "webp": [
-          {
-            "w": 480,
-            "file": "assets/images/aluno-na-esteira-480.webp"
-          },
-          {
-            "w": 720,
-            "file": "assets/images/aluno-na-esteira-720.webp"
-          },
-          {
-            "w": 853,
-            "file": "assets/images/aluno-na-esteira-853.webp"
-          }
-        ]
-      }
-    },
-    "aparelho-inclinado-pegada": {
-      "id": "aparelho-inclinado-pegada",
-      "source": "imagens-tratadas/treinos/11-aparelho-inclinado-pegada.png",
-      "width": 853,
-      "height": 1844,
-      "variants": {
-        "avif": [
-          {
-            "w": 480,
-            "file": "assets/images/aparelho-inclinado-pegada-480.avif"
-          },
-          {
-            "w": 720,
-            "file": "assets/images/aparelho-inclinado-pegada-720.avif"
-          },
-          {
-            "w": 853,
-            "file": "assets/images/aparelho-inclinado-pegada-853.avif"
-          }
-        ],
-        "webp": [
-          {
-            "w": 480,
-            "file": "assets/images/aparelho-inclinado-pegada-480.webp"
-          },
-          {
-            "w": 720,
-            "file": "assets/images/aparelho-inclinado-pegada-720.webp"
-          },
-          {
-            "w": 853,
-            "file": "assets/images/aparelho-inclinado-pegada-853.webp"
-          }
-        ]
-      }
-    },
-    "treino-integrado": {
-      "id": "treino-integrado",
-      "source": "imagens-tratadas/funcional/17-treino-integrado.png",
-      "width": 928,
-      "height": 1694,
-      "variants": {
-        "avif": [
-          {
-            "w": 480,
-            "file": "assets/images/treino-integrado-480.avif"
-          },
-          {
-            "w": 720,
-            "file": "assets/images/treino-integrado-720.avif"
-          },
-          {
-            "w": 928,
-            "file": "assets/images/treino-integrado-928.avif"
-          }
-        ],
-        "webp": [
-          {
-            "w": 480,
-            "file": "assets/images/treino-integrado-480.webp"
-          },
-          {
-            "w": 720,
-            "file": "assets/images/treino-integrado-720.webp"
-          },
-          {
-            "w": 928,
-            "file": "assets/images/treino-integrado-928.webp"
+            "w": 1080,
+            "file": "assets/images/encerramento-primeiro-passo-1080.webp"
           }
         ]
       }

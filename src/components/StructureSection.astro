@@ -1,4 +1,6 @@
 ---
+import type { PhotoId } from '../data/photos';
+import { photoSize } from '../lib/images';
 import Photo from './Photo.astro';
 import WhatsAppLink from './WhatsAppLink.astro';
 
@@ -8,6 +10,14 @@ const highlights = [
   { title: 'Aparelhos e anilhas', text: 'Equipamentos de força em vermelho e preto, halteres e suportes.' },
   { title: 'Mezanino e área de treino', text: 'Escada de acesso ao piso superior e área para outros treinos.' },
 ];
+
+// Par de fotos: caixas iguais com a proporção mais alta das duas; cada foto cabe inteira (object-fit: contain).
+const pair: { id: PhotoId; phrase: string }[] = [
+  { id: 'estrutura-vista-geral', phrase: 'Estrutura pensada para o seu melhor desempenho.' },
+  { id: 'estrutura-escada', phrase: 'O espaço ideal para a sua evolução.' },
+];
+const tallest = pair.map(({ id }) => photoSize(id)).reduce((a, b) => (b.height / b.width > a.height / a.width ? b : a));
+const boxRatio = `${tallest.width} / ${tallest.height}`;
 ---
 
 <section class="section structure" id="estrutura" aria-labelledby="estrutura-title">
@@ -39,19 +49,17 @@ const highlights = [
       </WhatsAppLink>
     </div>
 
-    <div class="structure__photos">
-      <figure class="structure__main" data-reveal>
-        <div class="frame">
-          <Photo id="visao-geral-entrada" sizes="(min-width: 1024px) 34vw, (min-width: 600px) 58vw, 92vw" />
-        </div>
-        <figcaption>Vista geral do salão, em direção à entrada</figcaption>
-      </figure>
-      <figure class="structure__side" data-reveal>
-        <div class="frame frame--cut-left">
-          <Photo id="escada-e-aparelhos" sizes="(min-width: 1024px) 22vw, (min-width: 600px) 38vw, 92vw" />
-        </div>
-        <figcaption>Escada, aparelhos e área de treino</figcaption>
-      </figure>
+    <div class="structure__photos" style={`--box-ratio: ${boxRatio}`}>
+      {
+        pair.map((p) => (
+          <figure class="structure__card" data-reveal>
+            <div class="frame frame--contain structure__frame">
+              <Photo id={p.id} sizes="(min-width: 1024px) 340px, (min-width: 600px) 46vw, 46vw" />
+            </div>
+            <figcaption class="structure__phrase">{p.phrase}</figcaption>
+          </figure>
+        ))
+      }
     </div>
   </div>
 </section>
@@ -108,31 +116,49 @@ const highlights = [
     font-size: 0.98rem;
   }
 
+  /* Duas fotos do mesmo tamanho, lado a lado em qualquer largura, alinhadas no topo e na base. */
   .structure__photos {
     display: grid;
-    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
-    gap: clamp(14px, 2vw, 24px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(10px, 2vw, 24px);
     align-items: start;
   }
-  .structure__photos figure {
+  .structure__card {
+    position: relative;
     margin: 0;
   }
-  .structure__main .frame {
-    aspect-ratio: 3 / 4.4;
+  .structure__frame {
+    aspect-ratio: var(--box-ratio);
   }
-  .structure__side {
-    margin-top: clamp(48px, 12vw, 160px) !important;
+  /* Frase sobreposta no topo da foto, com gradiente localizado só atrás do texto. */
+  .structure__phrase {
+    position: absolute;
+    inset: 0 0 auto 0;
+    padding: clamp(10px, 2vw, 22px) clamp(10px, 2vw, 22px) clamp(28px, 5vw, 56px);
+    background: linear-gradient(180deg, rgb(9 9 11 / 0.82) 0%, rgb(9 9 11 / 0.55) 55%, rgb(9 9 11 / 0) 100%);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.1rem, 0.8rem + 1.3vw, 1.85rem);
+    line-height: 1.08;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+    hyphens: none;
+    color: #fff;
   }
-  .structure__side .frame {
-    aspect-ratio: 3 / 5;
+  /* Entrada da frase: uma vez, ao aparecer na tela, depois da foto; a segunda com atraso discreto. */
+  :global(.reveal-on) .structure__phrase {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+      opacity 0.7s var(--ease) 0.25s,
+      transform 0.7s var(--ease) 0.25s;
   }
-  .structure__photos :global(img) {
-    height: 100%;
+  :global(.reveal-on) .structure__card + .structure__card .structure__phrase {
+    transition-delay: 0.4s;
   }
-  figcaption {
-    margin-top: 10px;
-    font-size: 0.88rem;
-    color: var(--muted);
+  :global(.reveal-on) .structure__card:global(.is-in) .structure__phrase {
+    opacity: 1;
+    transform: none;
   }
 
   @media (max-width: 1023px) {
@@ -141,14 +167,6 @@ const highlights = [
     }
     .structure__copy {
       position: static;
-    }
-  }
-  @media (max-width: 599px) {
-    .structure__photos {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
-    }
-    .structure__side {
-      margin-top: 40px !important;
     }
   }
 </style>
