@@ -1,0 +1,44 @@
+---
+/**
+ * Foto responsiva (AVIF + WebP) a partir do manifesto gerado por scripts/build-images.mjs.
+ * Sempre com width/height para reservar espaço e evitar CLS.
+ */
+import manifest from '../data/images.json';
+import { photoMeta, type PhotoId } from '../data/photos';
+import { withBase } from '../lib/paths';
+
+interface Props {
+  id: PhotoId;
+  sizes: string;
+  /** Imagem principal (LCP): carrega com prioridade, sem lazy. */
+  priority?: boolean;
+  class?: string;
+  alt?: string;
+  position?: string;
+  [key: `data-${string}`]: unknown;
+}
+
+const { id, sizes, priority = false, class: className, alt, position, ...rest } = Astro.props;
+const photo = (manifest.photos as Record<string, (typeof manifest.photos)['corredor-central']>)[id];
+if (!photo) throw new Error(`Foto não encontrada no manifesto: ${id}. Rode "npm run images".`);
+const meta = photoMeta[id];
+const srcset = (list: { w: number; file: string }[]) => list.map((v) => `${withBase(v.file)} ${v.w}w`).join(', ');
+const fallback = photo.variants.webp.find((v) => v.w === 720) ?? photo.variants.webp[photo.variants.webp.length - 1];
+---
+
+<picture>
+  <source type="image/avif" srcset={srcset(photo.variants.avif)} sizes={sizes} />
+  <source type="image/webp" srcset={srcset(photo.variants.webp)} sizes={sizes} />
+  <img
+    {...rest}
+    src={withBase(fallback.file)}
+    width={photo.width}
+    height={photo.height}
+    alt={alt ?? meta.alt}
+    loading={priority ? 'eager' : 'lazy'}
+    decoding={priority ? 'sync' : 'async'}
+    fetchpriority={priority ? 'high' : 'auto'}
+    class={className}
+    style={`object-position: ${position ?? meta.position}`}
+  />
+</picture>

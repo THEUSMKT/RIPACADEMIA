@@ -1,0 +1,415 @@
+---
+import { business } from '../data/business';
+import Photo from './Photo.astro';
+import HeroWaveBackground from './HeroWaveBackground.astro';
+import Icon from './Icon.astro';
+import WhatsAppLink from './WhatsAppLink.astro';
+
+const facts = [
+  { label: `Desde ${business.brandSince}`, detail: 'história da marca' },
+  { label: business.address.streetAddress, detail: `${business.address.neighborhood}, ${business.address.addressLocality}` },
+  { label: business.benefits.join(' e '), detail: 'consulte as condições' },
+];
+---
+
+<section class="hero" data-hero aria-labelledby="hero-title">
+  <HeroWaveBackground />
+
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <p class="eyebrow hero__eyebrow">
+        RIP Academia · {business.address.neighborhood}, {business.address.addressLocality}
+      </p>
+      <h1 id="hero-title" class="hero__title">
+        Seja sua <span class="accent">melhor versão.</span>
+      </h1>
+      <p class="hero__lede">
+        Musculação e CrossTraining em uma estrutura que você pode conhecer de perto. Dê o primeiro passo e converse com
+        a equipe sobre o seu Free Pass.
+      </p>
+      <div class="hero__actions">
+        <WhatsAppLink intent="free_pass" placement="hero" ctaId="hero_free_pass" icon="whatsapp" class="hero__cta">
+          {business.freePass.cta}
+        </WhatsAppLink>
+        <a class="btn btn--ghost" href="#estrutura">
+          Conhecer a estrutura
+          <Icon name="arrow-down" class="btn__arrow" />
+        </a>
+      </div>
+      <p class="hero__micro">Agendamento pelo WhatsApp. Consulte horários e condições.</p>
+
+      <ul class="hero__facts" aria-label="Destaques">
+        {
+          facts.map((f) => (
+            <li>
+              <strong>{f.label}</strong>
+              <span>{f.detail}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <figure class="hero__media">
+      <div class="frame hero__frame">
+        <Photo id="corredor-central" priority sizes="(min-width: 1280px) 560px, (min-width: 1024px) 44vw, 100vw" />
+      </div>
+      <figcaption class="hero__caption">Salão de musculação da RIP, na Av. Feitoria</figcaption>
+    </figure>
+  </div>
+
+  <button type="button" class="hero__motion" data-motion-toggle aria-pressed="false" hidden>
+    <Icon name="pause" class="icon-pause" />
+    <Icon name="play" class="icon-play" />
+    <span data-motion-label>Pausar movimento</span>
+  </button>
+</section>
+
+<script>
+  /**
+   * Controlador do Ribbon Glow: decide quando o renderer existe e quando desenha.
+   * Roda só no desktop, sem movimento reduzido, com o hero visível, a aba ativa e sem pausa do visitante.
+   * Um único renderer por página; start/stop nunca criam um segundo loop.
+   */
+  import type { RibbonGlowController } from '../scripts/ribbon-glow';
+
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-wave-canvas]');
+  const button = document.querySelector<HTMLButtonElement>('[data-motion-toggle]');
+  const label = document.querySelector<HTMLElement>('[data-motion-label]');
+  const PAUSE_KEY = 'rip-motion-paused';
+
+  if (hero && canvas && button && label) {
+    const mqDesktop = window.matchMedia('(min-width: 1024px)');
+    const mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    let ctrl: RibbonGlowController | null = null;
+    let loading: Promise<void> | null = null;
+    let failed = false;
+    let visible = true;
+    let ready = false;
+    let userPaused = false;
+    try {
+      userPaused = localStorage.getItem(PAUSE_KEY) === '1';
+    } catch {
+      /* sem armazenamento: a pausa vale só nesta visita */
+    }
+
+    const eligible = () => mqDesktop.matches && !mqReduce.matches && !failed;
+    const shouldRun = () => ready && eligible() && !userPaused && visible && !document.hidden;
+
+    const setMode = () => {
+      // 'live' mostra o canvas; 'static' mantém o fundo SVG. Pausado, o último quadro fica congelado.
+      hero.dataset.wave = ctrl && eligible() ? 'live' : 'static';
+      button.hidden = !(ready && eligible() && ctrl);
+      button.setAttribute('aria-pressed', String(userPaused));
+      label.textContent = userPaused ? 'Retomar movimento' : 'Pausar movimento';
+    };
+
+    const fail = () => {
+      failed = true;
+      ctrl = null;
+      setMode();
+    };
+
+    const ensure = () => {
+      if (ctrl || failed) return Promise.resolve();
+      loading ??= import('../scripts/ribbon-glow')
+        .then(async ({ createRibbonGlow }) => {
+          ctrl = await createRibbonGlow(
+            canvas,
+            hero,
+            {
+              background: '#09090B',
+              color1: '#F20A16',
+              color2: '#8F1018',
+              speed: 25,
+              size: 100,
+              angle: -180,
+              hover: 15,
+              reach: 180,
+              offset: [0.1, -0.26],
+              maxDpr: 1.25,
+              fps: 30,
+              layers: 84,
+              pointer: finePointer,
+            },
+            fail,
+          );
+          if (!ctrl) fail();
+        })
+        .catch(fail);
+      return loading;
+    };
+
+    const update = async () => {
+      if (shouldRun()) {
+        await ensure();
+        if (shouldRun()) ctrl?.start();
+        else ctrl?.stop();
+      } else {
+        ctrl?.stop();
+      }
+      setMode();
+    };
+
+    new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      update();
+    }).observe(hero);
+    document.addEventListener('visibilitychange', update);
+    mqReduce.addEventListener('change', update);
+    mqDesktop.addEventListener('change', update);
+
+    button.addEventListener('click', () => {
+      userPaused = !userPaused;
+      try {
+        localStorage.setItem(PAUSE_KEY, userPaused ? '1' : '0');
+      } catch {
+        /* ignora */
+      }
+      update();
+    });
+
+    // Inicializa depois do conteúdo, do CTA e da foto principal: evento load + ocioso.
+    const boot = () => {
+      ready = true;
+      update();
+    };
+    const idle = () =>
+      typeof window.requestIdleCallback === 'function' ? window.requestIdleCallback(boot, { timeout: 2000 }) : setTimeout(boot, 600);
+    if (document.readyState === 'complete') idle();
+    else window.addEventListener('load', idle, { once: true });
+
+    setMode();
+  }
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--background);
+    padding-block: clamp(28px, 5vw, 64px) clamp(56px, 7vw, 96px);
+  }
+  .hero__grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 52fr) minmax(0, 48fr);
+    gap: clamp(28px, 4vw, 64px);
+    align-items: center;
+  }
+  .hero__copy {
+    min-width: 0;
+  }
+  .hero__eyebrow {
+    margin-bottom: 20px;
+  }
+  .hero__title {
+    font-size: clamp(2.6rem, 1.2rem + 5.2vw, 5.5rem);
+    text-transform: uppercase;
+    line-height: 0.92;
+    letter-spacing: 0;
+    max-width: 11ch;
+  }
+  .hero__title .accent {
+    display: inline;
+  }
+  .hero__lede {
+    margin-top: 22px;
+    font-size: clamp(1.05rem, 1rem + 0.35vw, 1.22rem);
+    color: #d4d4da;
+    max-width: 50ch;
+  }
+  .hero__actions {
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .hero__cta {
+    padding-inline: 28px;
+    font-size: 1.05rem;
+  }
+  .hero__micro {
+    margin-top: 12px;
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+  .hero__facts {
+    list-style: none;
+    margin: 36px 0 0;
+    padding: 18px 0 0;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, auto));
+    justify-content: start;
+    gap: 12px 32px;
+  }
+  .hero__facts li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .hero__facts strong {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.3rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+  .hero__facts span {
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+
+  .hero__media {
+    margin: 0;
+    position: relative;
+    min-width: 0;
+  }
+  /* Linha vermelha discreta acompanhando a foto. */
+  .hero__media::before {
+    content: '';
+    position: absolute;
+    left: -14px;
+    top: 12%;
+    bottom: 18%;
+    width: 3px;
+    background: linear-gradient(180deg, transparent, var(--brand-red) 30%, var(--brand-red) 70%, transparent);
+    transform: skewY(-12deg);
+    z-index: 1;
+  }
+  .hero__frame {
+    aspect-ratio: 4 / 5;
+    max-height: min(74vh, 700px);
+    width: 100%;
+    margin-left: auto;
+    box-shadow: var(--shadow);
+    animation: hero-media 0.6s var(--ease) 0.1s both;
+  }
+  .hero__frame :global(img) {
+    height: 100%;
+  }
+  .hero__caption {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .hero__copy > * {
+    animation: hero-in 0.5s var(--ease) both;
+  }
+  .hero__copy > :nth-child(2) {
+    animation-delay: 0.05s;
+  }
+  .hero__copy > :nth-child(3) {
+    animation-delay: 0.1s;
+  }
+  .hero__copy > :nth-child(n + 4) {
+    animation-delay: 0.15s;
+  }
+
+  @keyframes hero-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+  @keyframes hero-media {
+    from {
+      opacity: 0;
+      transform: scale(0.985);
+    }
+  }
+
+  .hero__motion {
+    position: absolute;
+    z-index: 2;
+    right: var(--gutter);
+    bottom: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 14px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    background: rgb(21 21 24 / 0.7);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .hero__motion svg {
+    width: 16px;
+    height: 16px;
+  }
+  .hero__motion:hover {
+    color: var(--text);
+    border-color: var(--line-strong);
+  }
+  .hero__motion .icon-play,
+  .hero__motion[aria-pressed='true'] .icon-pause {
+    display: none;
+  }
+  .hero__motion[aria-pressed='true'] .icon-play {
+    display: block;
+  }
+
+  @media (max-width: 1023px) {
+    .hero {
+      padding-block: 24px 48px;
+    }
+    .hero__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
+    }
+    .hero__title {
+      font-size: clamp(2.5rem, 1.4rem + 5.4vw, 3.4rem);
+      max-width: 12ch;
+    }
+    .hero__lede {
+      margin-top: 16px;
+    }
+    .hero__actions {
+      margin-top: 24px;
+    }
+    .hero__media::before {
+      display: none;
+    }
+    .hero__frame {
+      aspect-ratio: 5 / 4;
+      max-height: none;
+    }
+  }
+
+  @media (max-width: 599px) {
+    .hero__eyebrow {
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 14px;
+    }
+    .hero__actions .btn {
+      width: 100%;
+    }
+    .hero__facts {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .hero__facts li {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .hero__facts strong {
+      font-size: 1.15rem;
+    }
+  }
+</style>

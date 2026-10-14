@@ -1,0 +1,51 @@
+---
+import WhatsAppLink from './WhatsAppLink.astro';
+---
+
+<div class="mobile-bar" data-mobile-bar>
+  <WhatsAppLink intent="free_pass" placement="barra_mobile" ctaId="barra_mobile_free_pass" class="mobile-bar__cta">
+    Agendar Free Pass
+  </WhatsAppLink>
+</div>
+
+<script>
+  // Oculta a barra quando o teclado virtual estiver sobre um campo (caso existam campos no futuro).
+  const bar = document.querySelector<HTMLElement>('[data-mobile-bar]');
+  if (bar) {
+    document.addEventListener('focusin', (e) => {
+      if (e.target instanceof HTMLElement && e.target.matches('input, textarea, select, [contenteditable]')) {
+        bar.classList.add('is-hidden');
+      }
+    });
+    document.addEventListener('focusout', () => bar.classList.remove('is-hidden'));
+  }
+</script>
+
+<style>
+  .mobile-bar {
+    display: none;
+  }
+  @media (max-width: 1023px) {
+    .mobile-bar {
+      display: block;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 55;
+      padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom, 0px));
+      background: rgb(21 21 24 / 0.96);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-top: 1px solid var(--line);
+    }
+    .mobile-bar :global(.mobile-bar__cta) {
+      width: 100%;
+      min-height: 52px;
+    }
+    .mobile-bar.is-hidden,
+    :global(html.dialog-open) .mobile-bar {
+      display: none;
+    }
+  }
+</style>
