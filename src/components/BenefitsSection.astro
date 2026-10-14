@@ -1,15 +1,23 @@
 ---
+import { business, fullAddress } from '../data/business';
+import type { PhotoId } from '../data/photos';
+import { ratioVar } from '../lib/images';
+import Photo from './Photo.astro';
 import WhatsAppLink from './WhatsAppLink.astro';
 
-// Identificação textual (sem logos ou modelos das artes recebidas). A RIP não é representante dessas empresas.
-const benefits = [
-  { id: 'wellhub', name: 'Wellhub', cta: 'Consultar acesso pelo Wellhub', intent: 'wellhub' },
-  { id: 'totalpass', name: 'TotalPass', cta: 'Consultar acesso pelo TotalPass', intent: 'totalpass' },
-] as const;
+// Artes recebidas da academia, com o endereço atualizado (scripts/corrigir-endereco-artes.py).
+// A arte já diz "Aceitamos": o card não repete essa palavra. Nome e dados ficam em HTML (título e alt).
+// A RIP não é representante dessas empresas; condições são consultadas com a equipe.
+const benefits: { id: 'wellhub' | 'totalpass'; name: string; cta: string; art: PhotoId }[] = [
+  { id: 'wellhub', name: 'Wellhub', cta: 'Consultar acesso pelo Wellhub', art: 'arte-wellhub' },
+  { id: 'totalpass', name: 'TotalPass', cta: 'Consultar acesso pelo TotalPass', art: 'arte-totalpass' },
+];
+const artAlt = (name: string) =>
+  `Arte da RIP Academia: Aceitamos ${name}. Aproveite o seu benefício e vem treinar com a Rip Academia. WhatsApp ${business.whatsappDisplay}. Endereço: ${fullAddress}.`;
 ---
 
 <section class="section benefits" id="beneficios" aria-labelledby="beneficios-title">
-  <div class="container benefits__grid">
+  <div class="container">
     <div class="benefits__copy" data-reveal>
       <p class="eyebrow">Benefícios corporativos</p>
       <h2 id="beneficios-title">Tem benefício corporativo? Consulte seu acesso à RIP.</h2>
@@ -19,9 +27,11 @@ const benefits = [
       {
         benefits.map((b) => (
           <li class="benefit" data-reveal>
-            <span class="benefit__label">Benefício aceito</span>
-            <strong class="benefit__name">{b.name}</strong>
-            <WhatsAppLink intent={b.intent} placement="beneficios" ctaId={`beneficio_${b.id}`} variant="ghost" icon="arrow">
+            <h3 class="sr-only">{b.name}</h3>
+            <div class="frame frame--fit benefit__art" style={ratioVar(b.art)}>
+              <Photo id={b.art} alt={artAlt(b.name)} sizes="(min-width: 1024px) 480px, (min-width: 768px) 44vw, 92vw" />
+            </div>
+            <WhatsAppLink intent={b.id} placement="beneficios" ctaId={`beneficio_${b.id}`} variant="ghost" icon="arrow">
               {b.cta}
             </WhatsAppLink>
           </li>
@@ -35,70 +45,56 @@ const benefits = [
   .benefits {
     background: var(--background);
   }
-  .benefits__grid {
-    display: grid;
-    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
-    gap: clamp(28px, 5vw, 80px);
-    align-items: center;
-  }
   .benefits__copy {
     display: flex;
     flex-direction: column;
     gap: 18px;
+    max-width: 760px;
+    margin-bottom: clamp(32px, 5vw, 56px);
   }
+  /* Desktop: dois cards lado a lado, com as artes inteiras na mesma altura (larguras proporcionais). */
   .benefits__list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(16px, 3vw, 40px);
   }
   .benefit {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      'label cta'
-      'name cta';
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 4px 20px;
-    padding: 24px 26px;
+    gap: 20px;
+    padding: clamp(16px, 2.4vw, 28px);
     background: var(--surface);
     border: 1px solid var(--line);
-    border-left: 3px solid var(--brand-red);
+    border-top: 3px solid var(--brand-red);
     border-radius: var(--radius-lg);
   }
-  .benefit__label {
-    grid-area: label;
-    font-size: 0.85rem;
-    color: var(--muted);
-    letter-spacing: 0.04em;
-  }
-  .benefit__name {
-    grid-area: name;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(2rem, 1.5rem + 1.6vw, 2.6rem);
-    line-height: 1;
+  .benefit__art {
+    --fit-h: min(74vh, 620px);
   }
   .benefit :global(.btn) {
-    grid-area: cta;
+    margin-top: auto;
   }
 
-  @media (max-width: 1023px) {
-    .benefits__grid {
+  /* Celular e tablet: cards empilhados, arte na largura toda para os textos dela ficarem legíveis. */
+  @media (max-width: 767px) {
+    .benefits__list {
       grid-template-columns: minmax(0, 1fr);
     }
-  }
-  @media (max-width: 599px) {
+    /* Arte na largura toda do card (sem margem interna) e botão logo abaixo. Cantos de cima retos
+       para a arte não ser recortada pelo arredondamento do card. */
     .benefit {
-      grid-template-columns: minmax(0, 1fr);
-      grid-template-areas: 'label' 'name' 'cta';
-      gap: 6px;
-      padding: 20px;
+      padding: 0 0 16px;
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    }
+    .benefit__art {
+      --fit-h: 100vh;
     }
     .benefit :global(.btn) {
-      margin-top: 12px;
-      width: 100%;
+      width: calc(100% - 32px);
     }
   }
 </style>

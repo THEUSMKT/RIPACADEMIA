@@ -13,7 +13,6 @@ export type EventName =
   | 'free_pass_click'
   | 'benefit_contact_click'
   | 'directions_click'
-  | 'gallery_open'
   | 'faq_open';
 
 type Params = Record<string, string>;

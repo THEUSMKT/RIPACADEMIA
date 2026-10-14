@@ -32,7 +32,7 @@ for (const f of files) {
   if (/\.(png|jpe?g)$/i.test(r) && !r.startsWith('assets/brand/')) errors.push(`Imagem de origem publicada: ${r}`);
   if (/IMG_\d+/i.test(r)) errors.push(`Referência IMG_* publicada: ${r}`);
   if (/\.tsx$/i.test(r)) errors.push(`TSX de referência publicado: ${r}`);
-  if (/arte-horarios|originais-referencia|referencias-atualizadas|imagens-tratadas|RipAcademia-Base/i.test(r)) errors.push(`Material do pacote publicado: ${r}`);
+  if (/arte-horarios|originais-referencia|referencias-atualizadas|imagens-tratadas|imagens-corrigidas|-fonte\.|RipAcademia-(Base|Edicoes)/i.test(r)) errors.push(`Material do pacote publicado: ${r}`);
 }
 
 // 2. Dados antigos e 3. links

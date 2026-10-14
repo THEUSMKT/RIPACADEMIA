@@ -1,5 +1,6 @@
 ---
 import { business } from '../data/business';
+import { ratioVar } from '../lib/images';
 import Photo from './Photo.astro';
 import WhatsAppLink from './WhatsAppLink.astro';
 
@@ -10,8 +11,8 @@ const reviews = business.reviews;
 <section class="section history" id="historia" aria-labelledby="historia-title">
   <div class="container history__grid">
     <figure class="history__media" data-reveal>
-      <div class="frame frame--cut-left history__frame">
-        <Photo id="foto-de-grupo" sizes="(min-width: 1024px) 40vw, 92vw" />
+      <div class="frame frame--fit history__frame" style={ratioVar('foto-de-grupo')}>
+        <Photo id="foto-de-grupo" sizes="(min-width: 1024px) 400px, (min-width: 600px) 360px, 92vw" />
       </div>
       <figcaption>Registro da academia: pessoas reunidas no espaço da RIP.</figcaption>
     </figure>
@@ -70,10 +71,7 @@ const reviews = business.reviews;
     margin: 0;
   }
   .history__frame {
-    aspect-ratio: 4 / 5;
-  }
-  .history__frame :global(img) {
-    height: 100%;
+    --fit-h: min(76vh, 700px);
   }
   .history__media figcaption {
     margin-top: 10px;
@@ -132,7 +130,7 @@ const reviews = business.reviews;
       order: -1;
     }
     .history__frame {
-      aspect-ratio: 4 / 3.4;
+      --fit-h: min(64vh, 600px);
     }
   }
 </style>

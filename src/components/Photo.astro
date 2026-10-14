@@ -1,7 +1,8 @@
 ---
 /**
  * Foto responsiva (AVIF + WebP) a partir do manifesto gerado por scripts/build-images.mjs.
- * Sempre com width/height para reservar espaço e evitar CLS.
+ * Sempre com width/height para reservar espaço e evitar CLS. A imagem é exibida inteira:
+ * as variantes não têm recorte e o CSS do site não usa object-fit: cover.
  */
 import manifest from '../data/images.json';
 import { photoMeta, type PhotoId } from '../data/photos';
@@ -14,12 +15,11 @@ interface Props {
   priority?: boolean;
   class?: string;
   alt?: string;
-  position?: string;
   [key: `data-${string}`]: unknown;
 }
 
-const { id, sizes, priority = false, class: className, alt, position, ...rest } = Astro.props;
-const photo = (manifest.photos as Record<string, (typeof manifest.photos)['corredor-central']>)[id];
+const { id, sizes, priority = false, class: className, alt, ...rest } = Astro.props;
+const photo = (manifest.photos as Record<string, (typeof manifest.photos)['fachada-rip']>)[id];
 if (!photo) throw new Error(`Foto não encontrada no manifesto: ${id}. Rode "npm run images".`);
 const meta = photoMeta[id];
 const srcset = (list: { w: number; file: string }[]) => list.map((v) => `${withBase(v.file)} ${v.w}w`).join(', ');
@@ -39,6 +39,5 @@ const fallback = photo.variants.webp.find((v) => v.w === 720) ?? photo.variants.
     decoding={priority ? 'sync' : 'async'}
     fetchpriority={priority ? 'high' : 'auto'}
     class={className}
-    style={`object-position: ${position ?? meta.position}`}
   />
 </picture>

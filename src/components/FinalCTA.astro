@@ -1,27 +1,27 @@
 ---
+/**
+ * Encerramento: foto de treino inteira e a mensagem final, com um único CTA local (Free Pass).
+ * Desktop: mensagem e foto lado a lado. Mobile: frase e CTA acima da foto.
+ * Entrada: a foto aparece com fade e deslocamento discreto, seguida da frase (≈ 0,9 s, uma vez).
+ */
 import { business } from '../data/business';
+import { ratioVar } from '../lib/images';
 import Photo from './Photo.astro';
 import WhatsAppLink from './WhatsAppLink.astro';
 ---
 
 <section class="section final" aria-labelledby="final-title">
-  <div class="container final__grid">
-    <div class="final__copy" data-reveal>
-      <p class="eyebrow">Próximo passo</p>
-      <h2 id="final-title">Seu próximo treino começa com uma conversa.</h2>
-      <p class="lede">Fale com a equipe pelo WhatsApp, consulte as condições do Free Pass e combine sua visita.</p>
-      <div class="final__actions">
-        <WhatsAppLink intent="free_pass" placement="fechamento" ctaId="fechamento_free_pass">
-          {business.freePass.cta}
-        </WhatsAppLink>
-        <p class="final__alt">
-          Prefere ligar? <a class="text-link" href={`tel:${business.phoneE164}`}>{business.whatsappDisplay}</a>
-        </p>
-      </div>
+  <div class="container final__grid" data-reveal>
+    <div class="final__copy">
+      <h2 id="final-title">Sua melhor versão começa com o <span class="accent">primeiro passo.</span></h2>
+      <p class="lede">Venha conhecer a RIP e dê o seu primeiro passo.</p>
+      <WhatsAppLink intent="free_pass" placement="fechamento" ctaId="fechamento_free_pass">
+        {business.freePass.cta}
+      </WhatsAppLink>
     </div>
-    <div class="final__media" data-reveal>
-      <div class="frame final__frame">
-        <Photo id="acompanhamento-no-aparelho" sizes="(min-width: 1024px) 36vw, 92vw" />
+    <div class="final__media">
+      <div class="frame frame--fit final__frame" style={ratioVar('encerramento-primeiro-passo')}>
+        <Photo id="encerramento-primeiro-passo" sizes="(min-width: 1024px) 480px, (min-width: 600px) 440px, 92vw" />
       </div>
     </div>
   </div>
@@ -30,22 +30,8 @@ import WhatsAppLink from './WhatsAppLink.astro';
 <style>
   .final {
     background: var(--surface);
-    overflow: hidden;
-  }
-  /* Brilho vermelho estático na base: eco da onda do hero, sem segundo renderer. */
-  .final::after {
-    content: '';
-    position: absolute;
-    left: -5%;
-    right: -5%;
-    bottom: -60px;
-    height: 160px;
-    background: radial-gradient(60% 50% at 70% 100%, rgb(242 10 22 / 0.28), transparent 70%);
-    pointer-events: none;
   }
   .final__grid {
-    position: relative;
-    z-index: 1;
     display: grid;
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     gap: clamp(28px, 5vw, 80px);
@@ -60,36 +46,52 @@ import WhatsAppLink from './WhatsAppLink.astro';
   .final__copy h2 {
     font-size: clamp(2.4rem, 1.4rem + 4vw, 4.6rem);
   }
-  .final__actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 14px 24px;
+  .final__copy :global(.btn) {
     margin-top: 6px;
   }
-  .final__alt {
-    color: var(--muted);
-  }
-  .final__alt a {
-    color: var(--text);
-    font-weight: 600;
+  .final__media {
+    display: flex;
+    justify-content: flex-end;
   }
   .final__frame {
-    aspect-ratio: 4 / 4.6;
+    --fit-h: min(78vh, 680px);
   }
-  .final__frame :global(img) {
-    height: 100%;
+
+  /* Sequência: foto primeiro, frase depois. Sem escala nem zoom. */
+  :global(.reveal-on) .final__grid[data-reveal] {
+    opacity: 1;
+    transform: none;
   }
+  :global(.reveal-on) .final__media,
+  :global(.reveal-on) .final__copy {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.55s var(--ease),
+      transform 0.55s var(--ease);
+  }
+  :global(.reveal-on) .final__copy {
+    transition-delay: 0.35s;
+  }
+  :global(.reveal-on) .final__grid:global(.is-in) .final__media,
+  :global(.reveal-on) .final__grid:global(.is-in) .final__copy {
+    opacity: 1;
+    transform: none;
+  }
+
   @media (max-width: 1023px) {
     .final__grid {
       grid-template-columns: minmax(0, 1fr);
     }
+    .final__media {
+      justify-content: flex-start;
+    }
     .final__frame {
-      aspect-ratio: 4 / 3.4;
+      --fit-h: min(72vh, 620px);
     }
   }
   @media (max-width: 599px) {
-    .final__actions :global(.btn) {
+    .final__copy :global(.btn) {
       width: 100%;
     }
   }

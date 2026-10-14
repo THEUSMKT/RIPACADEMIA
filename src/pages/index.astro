@@ -7,7 +7,7 @@ import ModalitiesSection from '../components/ModalitiesSection.astro';
 import FreePassSection from '../components/FreePassSection.astro';
 import BenefitsSection from '../components/BenefitsSection.astro';
 import HistorySection from '../components/HistorySection.astro';
-import Gallery from '../components/Gallery.astro';
+import InviteSection from '../components/InviteSection.astro';
 import LocationSection from '../components/LocationSection.astro';
 import FAQ from '../components/FAQ.astro';
 import FinalCTA from '../components/FinalCTA.astro';
@@ -16,7 +16,7 @@ import MobileConversionBar from '../components/MobileConversionBar.astro';
 import manifest from '../data/images.json';
 import { withBase } from '../lib/paths';
 
-const hero = manifest.photos['corredor-central'];
+const hero = manifest.photos['fachada-rip'];
 const heroSrcset = hero.variants.avif.map((v) => `${withBase(v.file)} ${v.w}w`).join(', ');
 ---
 
@@ -31,7 +31,7 @@ const heroSrcset = hero.variants.avif.map((v) => `${withBase(v.file)} ${v.w}w`).
     as="image"
     type="image/avif"
     imagesrcset={heroSrcset}
-    imagesizes="(min-width: 1280px) 560px, (min-width: 1024px) 44vw, 100vw"
+    imagesizes="(min-width: 1280px) 560px, (min-width: 1024px) 44vw, (min-width: 600px) 520px, 100vw"
     fetchpriority="high"
   />
   <Header />
@@ -42,7 +42,7 @@ const heroSrcset = hero.variants.avif.map((v) => `${withBase(v.file)} ${v.w}w`).
     <FreePassSection />
     <BenefitsSection />
     <HistorySection />
-    <Gallery />
+    <InviteSection />
     <LocationSection />
     <FAQ />
     <FinalCTA />

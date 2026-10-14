@@ -1,7 +1,8 @@
 ---
 import { business } from '../data/business';
 import Photo from './Photo.astro';
-import HeroWaveBackground from './HeroWaveBackground.astro';
+import WaveBackground from './WaveBackground.astro';
+import MotionToggle from './MotionToggle.astro';
 import Icon from './Icon.astro';
 import WhatsAppLink from './WhatsAppLink.astro';
 
@@ -12,8 +13,8 @@ const facts = [
 ];
 ---
 
-<section class="hero" data-hero aria-labelledby="hero-title">
-  <HeroWaveBackground />
+<section class="hero" data-hero data-wave-host aria-labelledby="hero-title">
+  <WaveBackground id="hero-wave" variant="hero" offsetWide={[0.1, -0.26]} offsetNarrow={[-0.05, 0.35]} sizeNarrow={55} />
 
   <div class="container hero__grid">
     <div class="hero__copy">
@@ -52,144 +53,14 @@ const facts = [
 
     <figure class="hero__media">
       <div class="frame hero__frame">
-        <Photo id="corredor-central" priority sizes="(min-width: 1280px) 560px, (min-width: 1024px) 44vw, 100vw" />
+        <Photo id="fachada-rip" priority sizes="(min-width: 1280px) 560px, (min-width: 1024px) 44vw, (min-width: 600px) 520px, 100vw" />
       </div>
-      <figcaption class="hero__caption">Salão de musculação da RIP, na Av. Feitoria</figcaption>
+      <figcaption class="hero__caption">Fachada da RIP Academia, na {business.address.streetAddress}.</figcaption>
     </figure>
   </div>
 
-  <button
-    type="button"
-    class="hero__motion"
-    data-motion-toggle
-    aria-pressed="false"
-    aria-label="Pausar movimento"
-    hidden
-  >
-    <Icon name="pause" class="icon-pause" />
-    <Icon name="play" class="icon-play" />
-  </button>
+  <MotionToggle />
 </section>
-
-<script>
-  /**
-   * Controlador do Ribbon Glow: decide quando o renderer existe e quando desenha.
-   * Roda só no desktop, sem movimento reduzido, com o hero visível, a aba ativa e sem pausa do visitante.
-   * Um único renderer por página; start/stop nunca criam um segundo loop.
-   */
-  import type { RibbonGlowController } from '../scripts/ribbon-glow';
-
-  const hero = document.querySelector<HTMLElement>('[data-hero]');
-  const canvas = document.querySelector<HTMLCanvasElement>('[data-wave-canvas]');
-  const button = document.querySelector<HTMLButtonElement>('[data-motion-toggle]');
-  const PAUSE_KEY = 'rip-motion-paused';
-
-  if (hero && canvas && button) {
-    const mqDesktop = window.matchMedia('(min-width: 1024px)');
-    const mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-
-    let ctrl: RibbonGlowController | null = null;
-    let loading: Promise<void> | null = null;
-    let failed = false;
-    let visible = true;
-    let ready = false;
-    let userPaused = false;
-    try {
-      userPaused = localStorage.getItem(PAUSE_KEY) === '1';
-    } catch {
-      /* sem armazenamento: a pausa vale só nesta visita */
-    }
-
-    const eligible = () => mqDesktop.matches && !mqReduce.matches && !failed;
-    const shouldRun = () => ready && eligible() && !userPaused && visible && !document.hidden;
-
-    const setMode = () => {
-      // 'live' mostra o canvas; 'static' mantém o fundo SVG. Pausado, o último quadro fica congelado.
-      hero.dataset.wave = ctrl && eligible() ? 'live' : 'static';
-      button.hidden = !(ready && eligible() && ctrl);
-      button.setAttribute('aria-pressed', String(userPaused));
-      button.setAttribute('aria-label', userPaused ? 'Retomar movimento' : 'Pausar movimento');
-    };
-
-    const fail = () => {
-      failed = true;
-      ctrl = null;
-      setMode();
-    };
-
-    const ensure = () => {
-      if (ctrl || failed) return Promise.resolve();
-      loading ??= import('../scripts/ribbon-glow')
-        .then(async ({ createRibbonGlow }) => {
-          ctrl = await createRibbonGlow(
-            canvas,
-            hero,
-            {
-              background: '#09090B',
-              color1: '#F20A16',
-              color2: '#8F1018',
-              speed: 25,
-              size: 100,
-              angle: -180,
-              hover: 15,
-              reach: 180,
-              offset: [0.1, -0.26],
-              maxDpr: 1.25,
-              fps: 30,
-              layers: 84,
-              pointer: finePointer,
-            },
-            fail,
-          );
-          if (!ctrl) fail();
-        })
-        .catch(fail);
-      return loading;
-    };
-
-    const update = async () => {
-      if (shouldRun()) {
-        await ensure();
-        if (shouldRun()) ctrl?.start();
-        else ctrl?.stop();
-      } else {
-        ctrl?.stop();
-      }
-      setMode();
-    };
-
-    new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-      update();
-    }).observe(hero);
-    document.addEventListener('visibilitychange', update);
-    mqReduce.addEventListener('change', update);
-    mqDesktop.addEventListener('change', update);
-
-    button.addEventListener('click', () => {
-      userPaused = !userPaused;
-      try {
-        localStorage.setItem(PAUSE_KEY, userPaused ? '1' : '0');
-      } catch {
-        /* ignora */
-      }
-      update();
-    });
-
-    // Inicializa depois do conteúdo, do CTA e da foto principal: evento load + ocioso.
-    const boot = () => {
-      ready = true;
-      update();
-    };
-    const idle = () =>
-      typeof window.requestIdleCallback === 'function' ? window.requestIdleCallback(boot, { timeout: 2000 }) : setTimeout(boot, 600);
-    if (document.readyState === 'complete') idle();
-    else window.addEventListener('load', idle, { once: true });
-
-    setMode();
-  }
-</script>
 
 <style>
   .hero {
@@ -239,10 +110,11 @@ const facts = [
     padding-inline: 28px;
     font-size: 1.05rem;
   }
+  /* Cinza mais claro que o --muted padrão: o texto pequeno fica sobre a onda e precisa de 4,5:1 no pior quadro. */
   .hero__micro {
     margin-top: 12px;
     font-size: 0.92rem;
-    color: var(--muted);
+    color: #c6c6ce;
   }
   .hero__facts {
     list-style: none;
@@ -270,7 +142,7 @@ const facts = [
   }
   .hero__facts span {
     font-size: 0.88rem;
-    color: var(--muted);
+    color: #c6c6ce;
   }
 
   .hero__media {
@@ -290,16 +162,12 @@ const facts = [
     transform: skewY(-12deg);
     z-index: 1;
   }
+  /* Fachada inteira, na proporção original (vertical): a altura do bloco segue a foto. */
   .hero__frame {
-    aspect-ratio: 4 / 5;
-    max-height: min(74vh, 700px);
     width: 100%;
     margin-left: auto;
     box-shadow: var(--shadow);
     animation: hero-media 0.6s var(--ease) 0.1s both;
-  }
-  .hero__frame :global(img) {
-    height: 100%;
   }
   .hero__caption {
     margin-top: 10px;
@@ -333,48 +201,10 @@ const facts = [
     }
   }
 
-  /* Controle discreto, só ícone, no canto inferior direito (longe dos CTAs). Alvo de toque 48 × 48. */
-  .hero__motion {
-    position: absolute;
-    z-index: 2;
-    right: var(--gutter);
-    bottom: 14px;
-    display: grid;
-    place-items: center;
-    width: 48px;
-    height: 48px;
-    padding: 0;
-    color: var(--muted);
-    background: rgb(9 9 11 / 0.45);
-    border: 1px solid var(--line);
-    border-radius: 50%;
-    cursor: pointer;
-    transition:
-      color 0.2s var(--ease),
-      border-color 0.2s var(--ease),
-      background-color 0.2s var(--ease);
-  }
-  .hero__motion svg {
-    width: 16px;
-    height: 16px;
-  }
-  .hero__motion:hover,
-  .hero__motion:focus-visible {
-    color: var(--text);
-    border-color: var(--line-strong);
-    background: rgb(9 9 11 / 0.7);
-  }
-  .hero__motion .icon-play,
-  .hero__motion[aria-pressed='true'] .icon-pause {
-    display: none;
-  }
-  .hero__motion[aria-pressed='true'] .icon-play {
-    display: block;
-  }
-
   @media (max-width: 1023px) {
     .hero {
-      padding-block: 24px 48px;
+      /* Base mais alta: o controle de pausa (48 px) fica abaixo da legenda da foto, sem sobrepor. */
+      padding-block: 24px 80px;
     }
     .hero__grid {
       grid-template-columns: minmax(0, 1fr);
@@ -393,9 +223,8 @@ const facts = [
     .hero__media::before {
       display: none;
     }
-    .hero__frame {
-      aspect-ratio: 5 / 4;
-      max-height: none;
+    .hero__media {
+      max-width: 520px;
     }
   }
 
