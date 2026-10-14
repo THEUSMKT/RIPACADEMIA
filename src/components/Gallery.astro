@@ -33,14 +33,19 @@ const lightboxData = items.map(({ id, group }) => {
         <p class="eyebrow">Galeria</p>
         <h2 id="galeria-title">Por dentro da RIP.</h2>
       </div>
-      <p class="gallery__hint">Toque ou clique em uma foto para ampliar.</p>
     </header>
 
     <ul class="gallery__grid">
       {
         items.map(({ id, group }, i) => (
           <li class={`gallery__item gallery__item--${i}`} data-reveal>
-            <button type="button" class="gallery__btn" data-gallery-index={i} aria-haspopup="dialog">
+            <button
+              type="button"
+              class="gallery__btn"
+              data-gallery-index={i}
+              aria-haspopup="dialog"
+              aria-label={`Ampliar foto: ${group}. ${photoMeta[id].alt}`}
+            >
               <span class="frame gallery__frame">
                 <Photo id={id} sizes="(min-width: 1024px) 30vw, (min-width: 600px) 45vw, 46vw" />
               </span>
@@ -48,7 +53,6 @@ const lightboxData = items.map(({ id, group }) => {
               <span class="gallery__zoom" aria-hidden="true">
                 <Icon name="expand" />
               </span>
-              <span class="sr-only">Ampliar foto: {photoMeta[id].alt}</span>
             </button>
           </li>
         ))
@@ -192,10 +196,6 @@ const lightboxData = items.map(({ id, group }) => {
     display: flex;
     flex-direction: column;
     gap: 16px;
-  }
-  .gallery__hint {
-    color: var(--muted);
-    font-size: 0.95rem;
   }
   /* Grid editorial assimétrico, moderado. */
   .gallery__grid {
