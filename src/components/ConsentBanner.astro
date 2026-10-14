@@ -1,0 +1,82 @@
+---
+/**
+ * Aviso de consentimento. Só é renderizado quando há algum ID de GA4, GTM ou Meta Pixel configurado.
+ * Sem escolha, nada carrega. "Aceitar" e "Recusar" têm o mesmo destaque.
+ */
+import { hasAnyTracker } from '../data/business';
+import { withBase } from '../lib/paths';
+---
+
+{
+  hasAnyTracker && (
+    <div class="consent" id="consent" role="region" aria-label="Preferências de privacidade" hidden>
+      <div class="consent__inner">
+        <p>
+          Usamos ferramentas de medição de visitas e de anúncios somente se você permitir.{' '}
+          <a class="text-link" href={withBase('privacidade/')}>Saiba mais</a>.
+        </p>
+        <div class="consent__actions">
+          <button type="button" class="btn btn--ghost" data-consent="denied">Recusar</button>
+          <button type="button" class="btn btn--ghost" data-consent="granted">Aceitar</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+<script>
+  import { readConsent, saveConsent, trackersConfigured } from '../lib/analytics';
+
+  const el = document.getElementById('consent');
+  if (el && trackersConfigured && readConsent() === null) {
+    el.hidden = false;
+    const setSpace = () => document.documentElement.style.setProperty('--consent-h', `${el.offsetHeight}px`);
+    setSpace();
+    window.addEventListener('resize', setSpace, { passive: true });
+    el.addEventListener('click', (e) => {
+      const btn = e.target instanceof Element ? e.target.closest<HTMLButtonElement>('[data-consent]') : null;
+      if (!btn) return;
+      saveConsent(btn.dataset.consent === 'granted' ? 'granted' : 'denied');
+      el.hidden = true;
+      document.documentElement.style.setProperty('--consent-h', '0px');
+      window.removeEventListener('resize', setSpace);
+    });
+  }
+</script>
+
+<style>
+  .consent {
+    position: fixed;
+    left: 0;
+    right: 0;
+    /* Acima da barra persistente do mobile, sem cobri-la. */
+    bottom: var(--mobile-bar-h);
+    z-index: 60;
+    background: var(--surface);
+    border-top: 1px solid var(--line-strong);
+    box-shadow: var(--shadow);
+  }
+  .consent__inner {
+    max-width: calc(var(--container) + 2 * var(--gutter));
+    margin-inline: auto;
+    padding: 16px var(--gutter);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 24px;
+  }
+  .consent p {
+    font-size: 0.95rem;
+    color: var(--muted);
+    flex: 1 1 320px;
+  }
+  .consent__actions {
+    display: flex;
+    gap: 12px;
+  }
+  .consent__actions .btn {
+    min-height: 48px;
+    min-width: 120px;
+  }
+</style>

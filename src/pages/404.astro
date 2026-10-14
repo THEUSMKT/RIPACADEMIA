@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileConversionBar from '../components/MobileConversionBar.astro';
+import WhatsAppLink from '../components/WhatsAppLink.astro';
+import { withBase } from '../lib/paths';
+---
+
+<BaseLayout title="Página não encontrada | RIP Academia" description="A página procurada não existe." path="404/" noindex>
+  <Header home={false} />
+  <main id="conteudo" tabindex="-1" class="section">
+    <div class="container notfound">
+      <p class="eyebrow">Erro 404</p>
+      <h1>Esta página não existe.</h1>
+      <p class="lede">O endereço pode ter mudado. Volte para o início ou fale com a equipe.</p>
+      <div class="notfound__actions">
+        <a class="btn btn--ghost" href={withBase('')}>Voltar ao início</a>
+        <WhatsAppLink intent="plans" placement="404" ctaId="404_falar">Falar com a academia</WhatsAppLink>
+      </div>
+    </div>
+  </main>
+  <Footer home={false} />
+  <MobileConversionBar />
+</BaseLayout>
+
+<style>
+  .notfound {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    min-height: 40vh;
+  }
+  .notfound h1 {
+    font-size: clamp(2.6rem, 1.6rem + 4vw, 4.4rem);
+    text-transform: uppercase;
+  }
+  .notfound__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+</style>

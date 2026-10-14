@@ -1,0 +1,146 @@
+---
+import '../styles/global.css';
+import { business } from '../data/business';
+import { absoluteUrl, withBase } from '../lib/paths';
+import ConsentBanner from '../components/ConsentBanner.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Caminho relativo ao base (ex.: '' para a home, 'privacidade/'). */
+  path?: string;
+  noindex?: boolean;
+  jsonLd?: boolean;
+}
+
+const { title, description, path = '', noindex = false, jsonLd = false } = Astro.props;
+const canonical = absoluteUrl(path);
+const ogImage = absoluteUrl('assets/brand/og-rip-academia.jpg');
+
+const dayMap = {
+  Monday: 'https://schema.org/Monday',
+  Tuesday: 'https://schema.org/Tuesday',
+  Wednesday: 'https://schema.org/Wednesday',
+  Thursday: 'https://schema.org/Thursday',
+  Friday: 'https://schema.org/Friday',
+  Saturday: 'https://schema.org/Saturday',
+  Sunday: 'https://schema.org/Sunday',
+} as const;
+
+// Dados estruturados compatíveis com o conteúdo visível. Sem coordenadas, CEP, priceRange ou avaliações.
+const structured = {
+  '@context': 'https://schema.org',
+  '@type': 'ExerciseGym',
+  name: business.name,
+  slogan: business.tagline,
+  foundingDate: String(business.brandSince),
+  url: absoluteUrl(''),
+  image: ogImage,
+  logo: absoluteUrl('assets/brand/logo-rip-790.webp'),
+  telephone: business.phoneE164,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: `${business.address.streetAddress} — ${business.address.neighborhood}`,
+    addressLocality: business.address.addressLocality,
+    addressRegion: business.address.addressRegion,
+    addressCountry: business.address.addressCountry,
+    ...(business.address.postalCode ? { postalCode: business.address.postalCode } : {}),
+  },
+  openingHoursSpecification: business.hours.map((h) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: h.days.map((d) => dayMap[d]),
+    opens: h.opens,
+    closes: h.closes,
+  })),
+  sameAs: [business.instagramUrl],
+};
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#09090B" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="icon" type="image/png" sizes="32x32" href={withBase('assets/brand/favicon-32.png')} />
+    <link rel="icon" type="image/png" sizes="192x192" href={withBase('assets/brand/icon-192.png')} />
+    <link rel="apple-touch-icon" href={withBase('assets/brand/apple-touch-icon.png')} />
+    <link rel="sitemap" href={withBase('sitemap.xml')} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content={business.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`Logo da ${business.name} e salão de musculação`} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <slot name="head" />
+
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(structured)} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <slot />
+    <ConsentBanner />
+
+    <script>
+      import { initAnalytics, track } from '../lib/analytics';
+      import { intentKind, type Intent } from '../lib/whatsapp';
+
+      initAnalytics();
+
+      // Um único listener delegado: cada clique gera um evento por tipo, sem dados pessoais.
+      document.addEventListener(
+        'click',
+        (event) => {
+          const target = event.target instanceof Element ? event.target.closest<HTMLElement>('[data-track]') : null;
+          if (!target) return;
+          const placement = target.dataset.placement ?? 'unknown';
+          const kind = target.dataset.track;
+          if (kind === 'whatsapp') {
+            const intent = (target.dataset.intent ?? 'plans') as Intent;
+            const ctaId = target.dataset.ctaId ?? 'unknown';
+            track('whatsapp_click', { cta_id: ctaId, placement, intent });
+            const k = intentKind(intent);
+            if (k === 'free_pass') track('free_pass_click', { cta_id: ctaId, placement });
+            if (k === 'benefit') track('benefit_contact_click', { benefit: intent, placement });
+          } else if (kind === 'directions') {
+            track('directions_click', { placement });
+          }
+        },
+        { capture: true },
+      );
+
+      // Revelação de seções: uma única execução por elemento.
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
+      if (!reduce.matches && 'IntersectionObserver' in window && items.length) {
+        document.documentElement.classList.add('reveal-on');
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-in');
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+        );
+        items.forEach((el) => io.observe(el));
+      }
+    </script>
+  </body>
+</html>
