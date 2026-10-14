@@ -38,9 +38,8 @@ const PHOTOS = [
   // Modalidades (CrossTraining: ajuste 4)
   { id: 'aluno-aparelho-vermelho', src: `${BASE}/treinos/09-aluno-no-aparelho-vermelho.png` },
   { id: 'crosstraining', src: `${EDIT}/imagens/04-crosstraining.jpg` },
-  // Free Pass e história
+  // Free Pass
   { id: 'aperto-de-maos', src: `${BASE}/conexao/22-aperto-de-maos.png` },
-  { id: 'foto-de-grupo', src: `${BASE}/equipe/06-foto-de-grupo.png` },
   // Benefícios: artes com o endereço corrigido por scripts/corrigir-endereco-artes.py (ajuste 5)
   { id: 'arte-wellhub', src: `${EDIT}/imagens-corrigidas/05-wellhub-endereco-av-feitoria.png` },
   { id: 'arte-totalpass', src: `${EDIT}/imagens-corrigidas/06-totalpass-endereco-av-feitoria.png` },

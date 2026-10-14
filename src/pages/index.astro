@@ -13,11 +13,10 @@ import FAQ from '../components/FAQ.astro';
 import FinalCTA from '../components/FinalCTA.astro';
 import Footer from '../components/Footer.astro';
 import MobileConversionBar from '../components/MobileConversionBar.astro';
-import manifest from '../data/images.json';
 import { withBase } from '../lib/paths';
 
-const hero = manifest.photos['fachada-rip'];
-const heroSrcset = hero.variants.avif.map((v) => `${withBase(v.file)} ${v.w}w`).join(', ');
+// Primeira tela: a logo grande da abertura (a fachada fica logo abaixo e carrega normalmente).
+const logoSrcset = `${withBase('assets/brand/logo-rip-400.webp')} 400w, ${withBase('assets/brand/logo-rip-790.webp')} 790w`;
 ---
 
 <BaseLayout
@@ -29,9 +28,9 @@ const heroSrcset = hero.variants.avif.map((v) => `${withBase(v.file)} ${v.w}w`).
     slot="head"
     rel="preload"
     as="image"
-    type="image/avif"
-    imagesrcset={heroSrcset}
-    imagesizes="(min-width: 1280px) 560px, (min-width: 1024px) 44vw, (min-width: 600px) 520px, 100vw"
+    type="image/webp"
+    imagesrcset={logoSrcset}
+    imagesizes="(min-width: 1024px) 620px, 80vw"
     fetchpriority="high"
   />
   <Header />

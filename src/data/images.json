@@ -216,42 +216,6 @@
         ]
       }
     },
-    "foto-de-grupo": {
-      "id": "foto-de-grupo",
-      "source": "RipAcademia-Base-ClaudeCode/imagens-tratadas/equipe/06-foto-de-grupo.png",
-      "width": 941,
-      "height": 1672,
-      "variants": {
-        "avif": [
-          {
-            "w": 480,
-            "file": "assets/images/foto-de-grupo-480.avif"
-          },
-          {
-            "w": 720,
-            "file": "assets/images/foto-de-grupo-720.avif"
-          },
-          {
-            "w": 941,
-            "file": "assets/images/foto-de-grupo-941.avif"
-          }
-        ],
-        "webp": [
-          {
-            "w": 480,
-            "file": "assets/images/foto-de-grupo-480.webp"
-          },
-          {
-            "w": 720,
-            "file": "assets/images/foto-de-grupo-720.webp"
-          },
-          {
-            "w": 941,
-            "file": "assets/images/foto-de-grupo-941.webp"
-          }
-        ]
-      }
-    },
     "arte-wellhub": {
       "id": "arte-wellhub",
       "source": "RipAcademia-Edicoes-ClaudeCode/imagens-corrigidas/05-wellhub-endereco-av-feitoria.png",

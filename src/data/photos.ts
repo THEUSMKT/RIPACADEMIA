@@ -10,7 +10,6 @@ export type PhotoId =
   | 'aluno-aparelho-vermelho'
   | 'crosstraining'
   | 'aperto-de-maos'
-  | 'foto-de-grupo'
   | 'arte-wellhub'
   | 'arte-totalpass'
   | 'convite-time'
@@ -34,9 +33,6 @@ export const photoMeta: Record<PhotoId, { alt: string }> = {
   },
   'aperto-de-maos': {
     alt: 'Aperto de mãos entre duas pessoas, com suportes de halteres e aparelhos ao fundo.',
-  },
-  'foto-de-grupo': {
-    alt: 'Foto de grupo de pessoas reunidas dentro da RIP Academia.',
   },
   // As artes recebem o texto completo (com os dados da configuração central) no componente de benefícios.
   'arte-wellhub': {

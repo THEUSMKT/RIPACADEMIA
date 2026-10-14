@@ -1,6 +1,7 @@
 ---
 import type { PhotoId } from '../data/photos';
 import { photoSize } from '../lib/images';
+import Icon from './Icon.astro';
 import Photo from './Photo.astro';
 import WhatsAppLink from './WhatsAppLink.astro';
 
@@ -11,13 +12,14 @@ const highlights = [
   { title: 'Mezanino e área de treino', text: 'Escada de acesso ao piso superior e área para outros treinos.' },
 ];
 
-// Par de fotos: caixas iguais com a proporção mais alta das duas; cada foto cabe inteira (object-fit: contain).
-const pair: { id: PhotoId; phrase: string }[] = [
+// Carrossel: slides do mesmo tamanho, com a proporção da foto mais alta; cada foto cabe inteira (object-fit: contain).
+const slides: { id: PhotoId; phrase: string }[] = [
   { id: 'estrutura-vista-geral', phrase: 'Estrutura pensada para o seu melhor desempenho.' },
   { id: 'estrutura-escada', phrase: 'O espaço ideal para a sua evolução.' },
 ];
-const tallest = pair.map(({ id }) => photoSize(id)).reduce((a, b) => (b.height / b.width > a.height / a.width ? b : a));
+const tallest = slides.map(({ id }) => photoSize(id)).reduce((a, b) => (b.height / b.width > a.height / a.width ? b : a));
 const boxRatio = `${tallest.width} / ${tallest.height}`;
+const boxR = (tallest.width / tallest.height).toFixed(4);
 ---
 
 <section class="section structure" id="estrutura" aria-labelledby="estrutura-title">
@@ -49,20 +51,152 @@ const boxRatio = `${tallest.width} / ${tallest.height}`;
       </WhatsAppLink>
     </div>
 
-    <div class="structure__photos" style={`--box-ratio: ${boxRatio}`}>
-      {
-        pair.map((p) => (
-          <figure class="structure__card" data-reveal>
-            <div class="frame frame--contain structure__frame">
-              <Photo id={p.id} sizes="(min-width: 1024px) 340px, (min-width: 600px) 46vw, 46vw" />
-            </div>
-            <figcaption class="structure__phrase">{p.phrase}</figcaption>
-          </figure>
-        ))
-      }
+    <div
+      class="carousel"
+      data-carousel
+      role="region"
+      aria-roledescription="carrossel"
+      aria-label="Fotos da estrutura"
+      style={`--box-ratio: ${boxRatio}; --box-r: ${boxR}`}
+    >
+      <ul class="carousel__track" data-carousel-track tabindex="0" aria-label="Fotos da estrutura. Use as setas do teclado para trocar de foto.">
+        {
+          slides.map((sl, i) => (
+            <li class="carousel__slide" data-carousel-slide aria-roledescription="slide" aria-label={`${i + 1} de ${slides.length}`}>
+              <figure class="carousel__figure">
+                <div class="frame frame--contain carousel__frame">
+                  <Photo id={sl.id} sizes="(min-width: 1024px) 520px, 86vw" />
+                </div>
+                <figcaption class="carousel__phrase">{sl.phrase}</figcaption>
+              </figure>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="carousel__controls" data-carousel-controls hidden>
+        <button type="button" class="carousel__btn" data-carousel-prev aria-label="Foto anterior">
+          <Icon name="chevron-left" />
+        </button>
+        <div class="carousel__dots">
+          {
+            slides.map((_, i) => (
+              <button type="button" class="carousel__dot" data-carousel-dot={i} aria-label={`Ir para a foto ${i + 1} de ${slides.length}`} />
+            ))
+          }
+        </div>
+        <button type="button" class="carousel__btn" data-carousel-next aria-label="Próxima foto">
+          <Icon name="chevron-right" />
+        </button>
+      </div>
     </div>
   </div>
 </section>
+
+<script>
+  /**
+   * Carrossel da estrutura: rolagem horizontal nativa com parada em cada slide (toque e trackpad),
+   * arraste com mouse, setas do teclado e botões/indicadores. Sem autoplay e sem biblioteca.
+   * A rolagem vertical da página continua livre (o arraste com mouse só existe dentro do carrossel).
+   */
+  const root = document.querySelector<HTMLElement>('[data-carousel]');
+  const track = root?.querySelector<HTMLElement>('[data-carousel-track]');
+  if (root && track) {
+    const slides = Array.from(track.querySelectorAll<HTMLElement>('[data-carousel-slide]'));
+    const prev = root.querySelector<HTMLButtonElement>('[data-carousel-prev]')!;
+    const next = root.querySelector<HTMLButtonElement>('[data-carousel-next]')!;
+    const dots = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-carousel-dot]'));
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let index = 0;
+    let inView = false;
+
+    root.querySelector<HTMLElement>('[data-carousel-controls]')!.hidden = false;
+
+    const leftOf = (i: number) => slides[i].offsetLeft - slides[0].offsetLeft;
+    const goTo = (i: number, smooth = true) => {
+      const target = Math.max(0, Math.min(slides.length - 1, i));
+      track.scrollTo({ left: leftOf(target), behavior: smooth && !reduce.matches ? 'smooth' : 'auto' });
+    };
+    // A frase de cada slide aparece (uma vez) quando o slide fica ativo com o carrossel na tela.
+    const reveal = () => {
+      if (inView) slides[index].classList.add('is-seen');
+    };
+    const sync = () => {
+      const x = track.scrollLeft;
+      let best = 0;
+      slides.forEach((_, i) => {
+        if (Math.abs(leftOf(i) - x) < Math.abs(leftOf(best) - x)) best = i;
+      });
+      // No fim da rolagem, o último slide é o ativo mesmo que não encoste na borda esquerda.
+      if (x + track.clientWidth >= track.scrollWidth - 2) best = slides.length - 1;
+      index = best;
+      prev.disabled = index === 0;
+      next.disabled = index === slides.length - 1;
+      dots.forEach((d, i) => d.setAttribute('aria-current', String(i === index)));
+      reveal();
+    };
+    let ticking = false;
+    track.addEventListener(
+      'scroll',
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          ticking = false;
+          sync();
+        });
+      },
+      { passive: true },
+    );
+
+    prev.addEventListener('click', () => goTo(index - 1));
+    next.addEventListener('click', () => goTo(index + 1));
+    dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+    track.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') goTo(index + 1);
+      else if (e.key === 'ArrowLeft') goTo(index - 1);
+      else if (e.key === 'Home') goTo(0);
+      else if (e.key === 'End') goTo(slides.length - 1);
+      else return;
+      e.preventDefault();
+    });
+
+    // Arraste com mouse (no toque, a rolagem nativa já faz isso). Solta no slide mais próximo do gesto.
+    let drag: { id: number; x: number; left: number; from: number } | null = null;
+    track.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      drag = { id: e.pointerId, x: e.clientX, left: track.scrollLeft, from: index };
+      track.setPointerCapture(e.pointerId);
+      track.classList.add('is-dragging');
+    });
+    track.addEventListener('pointermove', (e) => {
+      if (drag && e.pointerId === drag.id) track.scrollLeft = drag.left - (e.clientX - drag.x);
+    });
+    const endDrag = (e: PointerEvent) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const dx = e.clientX - drag.x;
+      const from = drag.from;
+      drag = null;
+      track.classList.remove('is-dragging');
+      goTo(Math.abs(dx) > 40 ? from + (dx < 0 ? 1 : -1) : from);
+    };
+    track.addEventListener('pointerup', endDrag);
+    track.addEventListener('pointercancel', endDrag);
+    track.addEventListener('dragstart', (e) => e.preventDefault());
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(
+        ([entry]) => {
+          inView = entry.isIntersecting;
+          reveal();
+        },
+        { threshold: 0.35 },
+      ).observe(root);
+    } else {
+      inView = true;
+    }
+    sync();
+  }
+</script>
 
 <style>
   .structure {
@@ -116,49 +250,164 @@ const boxRatio = `${tallest.width} / ${tallest.height}`;
     font-size: 0.98rem;
   }
 
-  /* Duas fotos do mesmo tamanho, lado a lado em qualquer largura, alinhadas no topo e na base. */
-  .structure__photos {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(10px, 2vw, 24px);
-    align-items: start;
+  /* ---------- Carrossel ---------- */
+  .carousel {
+    min-width: 0;
+    /* Um slide principal e a borda do próximo; altura limitada pela tela, sem recortar a foto. */
+    --slide-w: min(86%, calc(72vh * var(--box-r)));
   }
-  .structure__card {
+  .carousel__track {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    display: flex;
+    gap: clamp(12px, 1.6vw, 20px);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .carousel__track {
+      scroll-behavior: auto;
+    }
+  }
+  .carousel__track::-webkit-scrollbar {
+    display: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .carousel__track {
+      cursor: grab;
+    }
+  }
+  .carousel__track.is-dragging {
+    cursor: grabbing;
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+    user-select: none;
+  }
+  .carousel__slide {
+    flex: 0 0 var(--slide-w);
+    scroll-snap-align: start;
+  }
+  .carousel__figure {
     position: relative;
     margin: 0;
   }
-  .structure__frame {
+  .carousel__frame {
     aspect-ratio: var(--box-ratio);
   }
-  /* Frase sobreposta no topo da foto, com gradiente localizado só atrás do texto. */
-  .structure__phrase {
+  .carousel__frame :global(img) {
+    -webkit-user-drag: none;
+  }
+  /* Gradiente contínuo no alto da foto: escuro atrás da frase, transparente abaixo (sem caixa rígida). */
+  .carousel__figure::before {
+    content: '';
     position: absolute;
     inset: 0 0 auto 0;
-    padding: clamp(10px, 2vw, 22px) clamp(10px, 2vw, 22px) clamp(28px, 5vw, 56px);
-    background: linear-gradient(180deg, rgb(9 9 11 / 0.82) 0%, rgb(9 9 11 / 0.55) 55%, rgb(9 9 11 / 0) 100%);
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(1.1rem, 0.8rem + 1.3vw, 1.85rem);
-    line-height: 1.08;
-    letter-spacing: 0.01em;
+    height: 58%;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      rgb(10 10 12 / 0.84) 0%,
+      rgb(10 10 12 / 0.66) 20%,
+      rgb(10 10 12 / 0.4) 42%,
+      rgb(10 10 12 / 0.16) 66%,
+      rgb(10 10 12 / 0) 100%
+    );
+  }
+  /* Frase: Inter (já usada no site) em peso médio, sem a Barlow condensada e pesada. */
+  .carousel__phrase {
+    position: absolute;
+    inset: 0 0 auto 0;
+    z-index: 2;
+    padding: clamp(18px, 3.4vw, 32px) clamp(18px, 3.4vw, 32px) 0;
+    font-family: var(--font-body);
+    font-weight: 550;
+    font-size: clamp(1.2rem, 0.95rem + 0.9vw, 1.7rem);
+    line-height: 1.22;
+    letter-spacing: -0.012em;
     text-wrap: balance;
-    hyphens: none;
     color: #fff;
+    text-shadow: 0 1px 18px rgb(0 0 0 / 0.35);
   }
-  /* Entrada da frase: uma vez, ao aparecer na tela, depois da foto; a segunda com atraso discreto. */
-  :global(.reveal-on) .structure__phrase {
+  /* Entrada suave da frase quando o slide é revelado (uma vez); sem JS ou com movimento reduzido, já visível. */
+  :global(.reveal-on) .carousel__phrase {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(8px);
     transition:
-      opacity 0.7s var(--ease) 0.25s,
-      transform 0.7s var(--ease) 0.25s;
+      opacity 0.7s var(--ease) 0.15s,
+      transform 0.7s var(--ease) 0.15s;
   }
-  :global(.reveal-on) .structure__card + .structure__card .structure__phrase {
-    transition-delay: 0.4s;
-  }
-  :global(.reveal-on) .structure__card:global(.is-in) .structure__phrase {
+  :global(.reveal-on) .carousel__slide:global(.is-seen) .carousel__phrase {
     opacity: 1;
     transform: none;
+  }
+
+  .carousel__controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .carousel__controls[hidden] {
+    display: none;
+  }
+  .carousel__btn {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    color: var(--text);
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    cursor: pointer;
+    transition:
+      border-color 0.2s var(--ease),
+      background-color 0.2s var(--ease),
+      opacity 0.2s var(--ease);
+  }
+  .carousel__btn:hover:not(:disabled) {
+    border-color: rgb(255 255 255 / 0.45);
+    background: rgb(255 255 255 / 0.06);
+  }
+  .carousel__btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+  .carousel__dots {
+    display: flex;
+    gap: 2px;
+  }
+  /* Alvo de toque de 32 px; o indicador visível é a barra interna. */
+  .carousel__dot {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+  .carousel__dot::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    top: 50%;
+    height: 3px;
+    translate: 0 -50%;
+    border-radius: 2px;
+    background: var(--line-strong);
+    transition: background-color 0.2s var(--ease);
+  }
+  .carousel__dot[aria-current='true']::after {
+    background: var(--brand-red);
   }
 
   @media (max-width: 1023px) {

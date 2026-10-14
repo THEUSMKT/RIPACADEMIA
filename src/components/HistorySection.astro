@@ -1,7 +1,5 @@
 ---
 import { business } from '../data/business';
-import { ratioVar } from '../lib/images';
-import Photo from './Photo.astro';
 import WhatsAppLink from './WhatsAppLink.astro';
 
 // Avaliações só aparecem se houver itens autênticos em business.reviews (texto, autoria, fonte e link).
@@ -9,16 +7,10 @@ const reviews = business.reviews;
 ---
 
 <section class="section history" id="historia" aria-labelledby="historia-title">
-  <div class="container history__grid">
-    <figure class="history__media" data-reveal>
-      <div class="frame frame--fit history__frame" style={ratioVar('foto-de-grupo')}>
-        <Photo id="foto-de-grupo" sizes="(min-width: 1024px) 400px, (min-width: 600px) 360px, 92vw" />
-      </div>
-      <figcaption>Registro da academia: pessoas reunidas no espaço da RIP.</figcaption>
-    </figure>
-
-    <div class="history__copy" data-reveal>
-      <p class="history__year" aria-hidden="true">{business.brandSince}</p>
+  <!-- Sem foto: a foto de grupo saiu (não representa a equipe completa). Ano grande e texto lado a lado. -->
+  <div class="container history__grid" data-reveal>
+    <p class="history__year" aria-hidden="true">{business.brandSince}</p>
+    <div class="history__copy">
       <p class="eyebrow">História</p>
       <h2 id="historia-title">Uma história que começou em {business.brandSince}.</h2>
       <p class="lede">
@@ -63,38 +55,26 @@ const reviews = business.reviews;
   }
   .history__grid {
     display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-    gap: clamp(28px, 5vw, 88px);
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(32px, 6vw, 112px);
     align-items: center;
   }
-  .history__media {
-    margin: 0;
-  }
-  .history__frame {
-    --fit-h: min(76vh, 700px);
-  }
-  .history__media figcaption {
-    margin-top: 10px;
-    font-size: 0.88rem;
-    color: var(--muted);
-  }
   .history__copy {
-    position: relative;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 20px;
+    max-width: 640px;
   }
-  /* Ano em contorno, como grafismo estático. */
+  /* Ano em contorno, como grafismo estático; ocupa a coluna que era da foto. */
   .history__year {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(5rem, 3rem + 9vw, 11rem);
+    font-size: clamp(5rem, 2rem + 11vw, 15rem);
     line-height: 0.8;
     color: transparent;
     -webkit-text-stroke: 1.5px rgb(242 10 22 / 0.55);
     letter-spacing: 0.02em;
-    margin-bottom: 4px;
     user-select: none;
   }
   .history__reviews {
@@ -122,15 +102,10 @@ const reviews = business.reviews;
     font-size: 0.9rem;
   }
 
-  @media (max-width: 1023px) {
+  @media (max-width: 767px) {
     .history__grid {
       grid-template-columns: minmax(0, 1fr);
-    }
-    .history__copy {
-      order: -1;
-    }
-    .history__frame {
-      --fit-h: min(64vh, 600px);
+      gap: 12px;
     }
   }
 </style>

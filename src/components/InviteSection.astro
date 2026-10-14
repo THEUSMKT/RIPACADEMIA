@@ -1,12 +1,10 @@
 ---
 /**
  * Convite "Venha fazer parte desse time!" (substitui a antiga galeria).
- * Fundo preto com a onda Ribbon Glow, título grande com entrada palavra a palavra e a foto inteira.
+ * Fundo preto, título grande com entrada palavra a palavra e a foto inteira. Sem animação de fundo.
  */
 import { ratioVar } from '../lib/images';
-import MotionToggle from './MotionToggle.astro';
 import Photo from './Photo.astro';
-import WaveBackground from './WaveBackground.astro';
 
 const title = 'Venha fazer parte desse time!';
 // Palavras animadas uma a uma; as duas últimas ("desse time!") ficam em vermelho, com traço desenhado ao final.
@@ -14,9 +12,7 @@ const lead = ['Venha', 'fazer', 'parte'];
 const accent = ['desse', 'time!'];
 ---
 
-<section class="section invite" id="convite" data-wave-host aria-labelledby="convite-title">
-  <WaveBackground id="convite-wave" variant="convite" offsetWide={[0.05, -0.05]} offsetNarrow={[0, 0.05]} />
-
+<section class="section invite" id="convite" aria-labelledby="convite-title">
   <div class="container invite__inner">
     <h2 id="convite-title" class="invite__title" data-reveal>
       <span class="sr-only">{title}</span>
@@ -47,21 +43,14 @@ const accent = ['desse', 'time!'];
       </div>
     </figure>
   </div>
-
-  <MotionToggle corner="top" />
 </section>
 
 <style>
   .invite {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
     background: var(--background);
     padding-block: clamp(64px, 9vw, 128px) clamp(80px, 10vw, 144px);
   }
   .invite__inner {
-    position: relative;
-    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -131,7 +120,7 @@ const accent = ['desse', 'time!'];
     transform: skewX(-35deg) scaleX(1);
   }
 
-  /* Foto inteira e opaca, sem filtros; a onda aparece ao redor. */
+  /* Foto inteira e opaca, sem filtros. */
   .invite__media {
     margin: 0;
     width: 100%;

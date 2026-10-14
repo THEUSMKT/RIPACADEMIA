@@ -1,8 +1,8 @@
 ---
 import { business } from '../data/business';
+import { withBase } from '../lib/paths';
+import manifest from '../data/images.json';
 import Photo from './Photo.astro';
-import WaveBackground from './WaveBackground.astro';
-import MotionToggle from './MotionToggle.astro';
 import Icon from './Icon.astro';
 import WhatsAppLink from './WhatsAppLink.astro';
 
@@ -11,10 +11,30 @@ const facts = [
   { label: business.address.streetAddress, detail: `${business.address.neighborhood}, ${business.address.addressLocality}` },
   { label: business.benefits.join(' e '), detail: 'consulte as condições' },
 ];
+
+// Logo grande da abertura: o mesmo recorte fiel usado no cabeçalho (fundo preto puro), em duas larguras.
+const logo = manifest.brand.logo;
 ---
 
-<section class="hero" data-hero data-wave-host aria-labelledby="hero-title">
-  <WaveBackground id="hero-wave" variant="hero" offsetWide={[0.1, -0.26]} offsetNarrow={[-0.05, 0.35]} sizeNarrow={55} />
+<section class="hero" data-hero aria-labelledby="hero-title">
+  <!-- Abertura: logo em primeiro plano e o arco Predictive Arc 2 ao fundo (só aqui no site). -->
+  <div class="hero__brand" data-arc-host data-arc="static">
+    <div class="arc" aria-hidden="true">
+      <div class="arc__static"></div>
+      <canvas class="arc__canvas" data-arc-canvas></canvas>
+    </div>
+    <img
+      class="hero__logo"
+      src={withBase('assets/brand/logo-rip-790.webp')}
+      srcset={`${withBase('assets/brand/logo-rip-400.webp')} 400w, ${withBase('assets/brand/logo-rip-790.webp')} 790w`}
+      sizes="(min-width: 1024px) 620px, 80vw"
+      width={logo.width}
+      height={logo.height}
+      alt="RIP Academia, desde 2000"
+      fetchpriority="high"
+      decoding="async"
+    />
+  </div>
 
   <div class="container hero__grid">
     <div class="hero__copy">
@@ -53,26 +73,200 @@ const facts = [
 
     <figure class="hero__media">
       <div class="frame hero__frame">
-        <Photo id="fachada-rip" priority sizes="(min-width: 1280px) 560px, (min-width: 1024px) 44vw, (min-width: 600px) 520px, 100vw" />
+        <Photo id="fachada-rip" sizes="(min-width: 1280px) 560px, (min-width: 1024px) 44vw, (min-width: 600px) 520px, 100vw" />
       </div>
       <figcaption class="hero__caption">Fachada da RIP Academia, na {business.address.streetAddress}.</figcaption>
     </figure>
   </div>
-
-  <MotionToggle />
 </section>
+
+<script>
+  /**
+   * Controlador do Predictive Arc 2 (só na abertura do hero; não há outra animação de fundo no site).
+   * O renderer é criado depois do carregamento, em momento ocioso, e só desenha com a abertura visível e a
+   * aba ativa. Com movimento reduzido, desenha um único quadro parado. Sem WebGL ou com falha, fica o arco
+   * estático em CSS. Não há botão manual de pausa: as pausas são automáticas.
+   */
+  import type { PredictiveArcController } from '../scripts/predictive-arc';
+
+  const host = document.querySelector<HTMLElement>('[data-arc-host]');
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-arc-canvas]');
+
+  if (host && canvas) {
+    const mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    let ctrl: PredictiveArcController | null = null;
+    let loading: Promise<void> | null = null;
+    let failed = false;
+    let visible = false;
+    let ready = false;
+
+    // 'live' = animando; 'still' = quadro parado (movimento reduzido); 'static' = arco em CSS.
+    const setMode = () => {
+      host.dataset.arc = ctrl ? (mqReduce.matches ? 'still' : 'live') : 'static';
+    };
+    const fail = () => {
+      failed = true;
+      ctrl = null;
+      setMode();
+    };
+    const ensure = () => {
+      if (ctrl || failed) return Promise.resolve();
+      loading ??= import('../scripts/predictive-arc')
+        .then(({ createPredictiveArc, RIP_ARC_PRESET }) => {
+          // Orçamento moderado: DPR até 1,5 e 30 quadros/s (o original desenha todo quadro com DPR até 2).
+          ctrl = createPredictiveArc(canvas, host, { ...RIP_ARC_PRESET, maxDpr: 1.5, fps: 30, pointer: finePointer }, fail);
+          if (!ctrl) fail();
+        })
+        .catch(fail);
+      return loading;
+    };
+    const shouldRun = () => ready && !failed && visible && !document.hidden && !mqReduce.matches;
+
+    const update = async () => {
+      if (ready && !failed && mqReduce.matches) {
+        await ensure();
+        ctrl?.drawStill();
+      } else if (shouldRun()) {
+        await ensure();
+        if (shouldRun()) ctrl?.start();
+        else ctrl?.stop();
+      } else {
+        ctrl?.stop();
+      }
+      setMode();
+    };
+
+    new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      update();
+    }).observe(host);
+    document.addEventListener('visibilitychange', update);
+    mqReduce.addEventListener('change', update);
+
+    // Logo, textos e CTAs aparecem antes; o arco começa depois do load, sem atrasar a página.
+    const boot = () => {
+      ready = true;
+      update();
+    };
+    const idle = () =>
+      typeof window.requestIdleCallback === 'function' ? window.requestIdleCallback(boot, { timeout: 1500 }) : setTimeout(boot, 400);
+    if (document.readyState === 'complete') idle();
+    else window.addEventListener('load', idle, { once: true });
+  }
+</script>
 
 <style>
   .hero {
     position: relative;
-    isolation: isolate;
     overflow: hidden;
     background: var(--background);
-    padding-block: clamp(28px, 5vw, 64px) clamp(56px, 7vw, 96px);
+    padding-bottom: clamp(56px, 7vw, 96px);
   }
+
+  /* ---------- Abertura: arco ao fundo, logo à frente ---------- */
+  .hero__brand {
+    /* Posição e largura da logo, compartilhadas com o halo escuro atrás dela. */
+    --logo-w: min(620px, 78vw);
+    --logo-y: 40%;
+    position: relative;
+    isolation: isolate;
+    height: clamp(380px, 60vh, 600px);
+    height: clamp(380px, 60svh, 600px);
+    background: #000;
+    overflow: hidden;
+  }
+  .arc {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    container-type: size;
+  }
+  .arc__canvas,
+  .arc__static {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.8s var(--ease);
+  }
+  .arc__canvas {
+    opacity: 0;
+  }
+  .hero__brand:is([data-arc='live'], [data-arc='still']) .arc__canvas {
+    opacity: 1;
+  }
+  .hero__brand:is([data-arc='live'], [data-arc='still']) .arc__static {
+    opacity: 0;
+  }
+  /*
+   * Arco estático equivalente (sem WebGL, ou antes do renderer iniciar): mesma geometria do shader
+   * (raio 0,9 × largura, ápice a 45 % da base, faixa mais larga por fora) e grade de quadrados
+   * com o passo do original (menor lado ÷ 40).
+   */
+  .arc__static {
+    --cell: calc(100cqmin / 40);
+    background: radial-gradient(
+      circle at 50% calc(55cqh + 90cqw),
+      transparent calc(90cqw - 70px),
+      rgb(172 43 43 / 0.85) calc(90cqw - 24px),
+      rgb(249 23 0) 90cqw,
+      rgb(172 43 43 / 0.75) calc(90cqw + 80px),
+      transparent calc(90cqw + 210px)
+    );
+    -webkit-mask:
+      linear-gradient(90deg, #000 70%, transparent 0) 0 0 / var(--cell) var(--cell),
+      linear-gradient(#000 70%, transparent 0) 0 0 / var(--cell) var(--cell);
+    -webkit-mask-composite: source-in;
+    mask:
+      linear-gradient(90deg, #000 70%, transparent 0) 0 0 / var(--cell) var(--cell),
+      linear-gradient(#000 70%, transparent 0) 0 0 / var(--cell) var(--cell);
+    mask-composite: intersect;
+  }
+  /*
+   * Halo escuro e suave só atrás das letras (o "RIP" vermelho não se perde nos quadrados vermelhos) e
+   * transição do preto da abertura para o fundo do restante do hero. O arco continua visível em volta.
+   */
+  .arc::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(
+        calc(var(--logo-w) * 0.62) calc(var(--logo-w) * 0.36) at 50% var(--logo-y),
+        rgb(0 0 0 / 0.86) 0%,
+        rgb(0 0 0 / 0.7) 45%,
+        rgb(0 0 0 / 0) 100%
+      ),
+      linear-gradient(180deg, rgb(9 9 11 / 0) 84%, var(--background));
+  }
+  /*
+   * Logo real, inteira e nas proporções originais. O recorte tem fundo preto puro: com lighten, esse preto
+   * deixa o arco aparecer em volta das letras, sem caixa opaca e sem redesenhar a marca.
+   */
+  .hero__logo {
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    top: var(--logo-y);
+    translate: -50% -50%;
+    width: var(--logo-w);
+    height: auto;
+    mix-blend-mode: lighten;
+    animation: hero-logo 0.8s var(--ease) 0.05s both;
+  }
+  @keyframes hero-logo {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+
   .hero__grid {
     position: relative;
     z-index: 1;
+    padding-top: clamp(32px, 5vw, 64px);
     display: grid;
     grid-template-columns: minmax(0, 52fr) minmax(0, 48fr);
     gap: clamp(28px, 4vw, 64px);
@@ -110,11 +304,10 @@ const facts = [
     padding-inline: 28px;
     font-size: 1.05rem;
   }
-  /* Cinza mais claro que o --muted padrão: o texto pequeno fica sobre a onda e precisa de 4,5:1 no pior quadro. */
   .hero__micro {
     margin-top: 12px;
     font-size: 0.92rem;
-    color: #c6c6ce;
+    color: var(--muted);
   }
   .hero__facts {
     list-style: none;
@@ -142,7 +335,7 @@ const facts = [
   }
   .hero__facts span {
     font-size: 0.88rem;
-    color: #c6c6ce;
+    color: var(--muted);
   }
 
   .hero__media {
@@ -203,8 +396,17 @@ const facts = [
 
   @media (max-width: 1023px) {
     .hero {
-      /* Base mais alta: o controle de pausa (48 px) fica abaixo da legenda da foto, sem sobrepor. */
-      padding-block: 24px 80px;
+      padding-bottom: 48px;
+    }
+    /* Abertura mais baixa no celular: o título do hero já aparece na primeira tela. */
+    .hero__brand {
+      --logo-w: min(560px, 80vw);
+      --logo-y: 42%;
+      height: clamp(320px, 52vh, 560px);
+      height: clamp(320px, 52svh, 560px);
+    }
+    .hero__grid {
+      padding-top: 28px;
     }
     .hero__grid {
       grid-template-columns: minmax(0, 1fr);
