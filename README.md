@@ -110,7 +110,7 @@ A primeira tela mostra a logo real da RIP, grande e inteira, com o arco de peque
 
 ## Surgimento das fotos
 
-Cada foto, na primeira vez que entra na tela, aparece com fade-in enquanto uma faixa de quadradinhos vermelhos sobe por ela e se desfaz até a foto ficar inteira (`src/scripts/image-reveal.ts`, cerca de 1,3 s). As partículas usam as cores do arco do hero (`#F91700` e `#AC2B2B`) e a mesma grade, com o menor lado ÷ 40 e quadrados de 7 a 16 px.
+Na primeira vez que entram na tela, a fachada do hero, as duas fotos do carrossel da estrutura e a foto da Musculação aparecem com fade-in enquanto uma faixa de quadradinhos vermelhos sobe por elas e se desfaz até a foto ficar inteira (`src/scripts/image-reveal.ts`, cerca de 1,3 s). As artes de Wellhub e TotalPass e as fotos do CrossTraining, do Free Pass, do convite e do encerramento ficam sem o efeito, a pedido; o contêiner delas tem `data-img-fx-off`. Para ligar ou desligar o efeito numa foto, basta tirar ou pôr esse atributo. As partículas usam as cores do arco do hero (`#F91700` e `#AC2B2B`) e a mesma grade, com o menor lado ÷ 40 e quadrados de 7 a 16 px.
 
 - As partículas ficam num canvas 2D temporário sobre a foto, removido no fim; a foto não é recortada, ampliada nem alterada.
 - Não há efeito com movimento reduzido nem sem JavaScript.
@@ -184,11 +184,12 @@ Os rAF/s e os tempos de quadro acima são do Chromium headless com WebGL **por s
 
 Mesmo ambiente da segunda rodada.
 
-- **`npm run test:e2e`: 76/76**, com 12 verificações novas em 1440 e 390 px:
+- **`npm run test:e2e`: 80/80**, com 16 verificações do efeito em 1440 e 390 px:
   - fotos fora da tela marcadas para surgir, e as já visíveis sem piscar;
   - durante o surgimento, partículas sobre a foto e foto em fade;
   - ao fim, foto inteira e canvas removido;
   - no carrossel, a segunda foto surge quando o slide aparece;
+  - as seis fotos marcadas com `data-img-fx-off` aparecem direto, sem partículas;
   - sem efeito com movimento reduzido, e fotos visíveis sem JavaScript.
 - **Larguras 360, 390, 768 e 1440 px:** rolando a página inteira, as 10 fotos terminam visíveis, sem partículas sobrando, sem rolagem horizontal nem erros.
 

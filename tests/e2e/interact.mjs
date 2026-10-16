@@ -265,11 +265,25 @@ for (const [w, h, mobile] of [[1440, 900, false], [390, 844, true]]) {
     return {
       on: document.documentElement.classList.contains('img-fx'),
       marked: document.querySelectorAll('[data-img-fx]').length,
-      total: document.querySelectorAll('main picture > img').length,
+      // Fotos que levam o efeito: fora da tela ao abrir e sem data-img-fx-off.
+      expected: [...document.querySelectorAll('main picture > img')].filter((img) => {
+        const host = img.parentElement.parentElement;
+        const r = host.getBoundingClientRect();
+        return !host.hasAttribute('data-img-fx-off') && !(r.top < innerHeight && r.bottom > 0);
+      }).length,
       visibleAtLoadShown: visibleAtLoad.every((img) => getComputedStyle(img).opacity === '1'),
     };
   });
-  ok(`[${w}] fotos fora da tela marcadas para surgir; as já visíveis não piscam`, start.on && start.marked >= start.total - 1 && start.visibleAtLoadShown, JSON.stringify(start));
+  ok(`[${w}] fotos fora da tela marcadas para surgir; as já visíveis não piscam`, start.on && start.marked === start.expected && start.marked >= 3 && start.visibleAtLoadShown, JSON.stringify(start));
+
+  // Sem efeito, a pedido: artes de benefícios, CrossTraining, Free Pass, convite e encerramento.
+  const off = await page.evaluate(() =>
+    ['.benefit__art', '#crosstraining .modality__frame', '.freepass__frame', '.invite__frame', '.final__photo'].map((sel) => {
+      const hosts = [...document.querySelectorAll(sel)];
+      return { sel, n: hosts.length, ok: hosts.length > 0 && hosts.every((h) => h.hasAttribute('data-img-fx-off') && !h.hasAttribute('data-img-fx')) };
+    }),
+  );
+  ok(`[${w}] sem efeito nas artes, CrossTraining, Free Pass, convite e encerramento`, off.every((o) => o.ok), JSON.stringify(off.filter((o) => !o.ok)));
 
   const sel = '.modality__frame';
   await page.evaluate((sel) => document.querySelector(sel).scrollIntoView({ behavior: 'instant', block: 'center' }), sel);
@@ -296,6 +310,14 @@ for (const [w, h, mobile] of [[1440, 900, false], [390, 844, true]]) {
   // No celular aparece só a borda do segundo slide (< 20 %): ele surge ao trocar. No desktop a borda já é maior.
   ok(`[${w}] carrossel: a segunda foto surge quando o slide aparece`, before[0] && (!mobile || !before[1]) && after[1], `${JSON.stringify(before)} → ${JSON.stringify(after)}`);
 
+  for (const sel of ['.benefit__art', '#crosstraining .modality__frame', '.freepass__frame', '.invite__frame', '.final__photo']) {
+    await page.evaluate((sel) => document.querySelector(sel).scrollIntoView({ behavior: 'instant', block: 'center' }), sel);
+    await page.waitForTimeout(250);
+  }
+  const offState = await page.evaluate(() =>
+    [...document.querySelectorAll('[data-img-fx-off] img')].map((i) => ({ op: getComputedStyle(i).opacity, canvas: !!i.closest('[data-img-fx-off]').querySelector('.img-fx__canvas') })),
+  );
+  ok(`[${w}] fotos sem efeito aparecem direto, sem partículas`, offState.length === 6 && offState.every((o) => o.op === '1' && !o.canvas), JSON.stringify(offState));
   ok(`[${w}] surgimento sem erros de console`, errors.length === 0, errors.join(' | '));
   await ctx.close();
 }
