@@ -49,3 +49,9 @@ const logoSrcset = `${withBase('assets/brand/logo-rip-400.webp')} 400w, ${withBa
   <Footer />
   <MobileConversionBar />
 </BaseLayout>
+
+<script>
+  // Fade-in com partículas vermelhas em cada foto, na primeira vez que ela entra na tela.
+  import { initImageReveal } from '../scripts/image-reveal';
+  initImageReveal();
+</script>

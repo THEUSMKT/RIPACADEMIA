@@ -60,7 +60,8 @@ const noOldMotion = (page) =>
     toggles: document.querySelectorAll('[data-motion-toggle], .motion-toggle, [aria-label*="movimento" i]').length,
     wave: document.querySelectorAll('[data-wave], [data-wave-host], .wave').length,
     ribbon: performance.getEntriesByType('resource').some((r) => /ribbon|wave-controller/i.test(r.name)),
-    canvasOutsideHero: [...document.querySelectorAll('canvas')].filter((c) => !c.closest('[data-arc-host]')).length,
+    // Os canvas temporários das partículas de surgimento das fotos (.img-fx__canvas) não contam.
+    canvasOutsideHero: [...document.querySelectorAll('canvas:not(.img-fx__canvas)')].filter((c) => !c.closest('[data-arc-host]')).length,
   }));
 
 // Encerramento: mensagem dentro da área da foto.
@@ -248,6 +249,57 @@ const finalLayout = (page) =>
   await ctx.close();
 }
 
+// ---------- Surgimento das fotos: fade-in com partículas vermelhas ----------
+for (const [w, h, mobile] of [[1440, 900, false], [390, 844, true]]) {
+  const ctx = await browser.newContext({ viewport: { width: w, height: h }, isMobile: mobile, hasTouch: mobile });
+  const page = await ctx.newPage();
+  const errors = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  await page.goto(URL, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(1200);
+  const start = await page.evaluate(() => {
+    const visibleAtLoad = [...document.querySelectorAll('main picture > img')].filter((img) => {
+      const r = img.getBoundingClientRect();
+      return r.top < innerHeight && r.bottom > 0;
+    });
+    return {
+      on: document.documentElement.classList.contains('img-fx'),
+      marked: document.querySelectorAll('[data-img-fx]').length,
+      total: document.querySelectorAll('main picture > img').length,
+      visibleAtLoadShown: visibleAtLoad.every((img) => getComputedStyle(img).opacity === '1'),
+    };
+  });
+  ok(`[${w}] fotos fora da tela marcadas para surgir; as já visíveis não piscam`, start.on && start.marked >= start.total - 1 && start.visibleAtLoadShown, JSON.stringify(start));
+
+  const sel = '.modality__frame';
+  await page.evaluate((sel) => document.querySelector(sel).scrollIntoView({ behavior: 'instant', block: 'center' }), sel);
+  await page.waitForTimeout(350);
+  const mid = await page.evaluate((sel) => {
+    const host = document.querySelector(sel);
+    return { canvas: !!host.querySelector('.img-fx__canvas'), opacity: Number(getComputedStyle(host.querySelector('img')).opacity) };
+  }, sel);
+  ok(`[${w}] durante o surgimento: partículas sobre a foto e foto em fade`, mid.canvas && mid.opacity > 0 && mid.opacity < 1, JSON.stringify(mid));
+  await page.waitForTimeout(1600);
+  const end = await page.evaluate((sel) => {
+    const host = document.querySelector(sel);
+    return { canvas: !!host.querySelector('.img-fx__canvas'), opacity: getComputedStyle(host.querySelector('img')).opacity, revealed: host.classList.contains('is-revealed') };
+  }, sel);
+  ok(`[${w}] ao fim: foto inteira e partículas removidas`, !end.canvas && end.opacity === '1' && end.revealed, JSON.stringify(end));
+
+  // Carrossel: a segunda foto só surge quando o slide entra na tela.
+  await page.evaluate(() => document.querySelector('[data-carousel]').scrollIntoView({ behavior: 'instant', block: 'center' }));
+  await page.waitForTimeout(1800);
+  const before = await page.evaluate(() => [...document.querySelectorAll('.carousel__frame')].map((f) => f.classList.contains('is-revealed')));
+  await page.click('[data-carousel-next]');
+  await page.waitForTimeout(2200);
+  const after = await page.evaluate(() => [...document.querySelectorAll('.carousel__frame')].map((f) => f.classList.contains('is-revealed')));
+  // No celular aparece só a borda do segundo slide (< 20 %): ele surge ao trocar. No desktop a borda já é maior.
+  ok(`[${w}] carrossel: a segunda foto surge quando o slide aparece`, before[0] && (!mobile || !before[1]) && after[1], `${JSON.stringify(before)} → ${JSON.stringify(after)}`);
+
+  ok(`[${w}] surgimento sem erros de console`, errors.length === 0, errors.join(' | '));
+  await ctx.close();
+}
+
 // ---------- Mobile: arco animado, menu, barra, carrossel, encerramento ----------
 {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
@@ -330,6 +382,10 @@ const finalLayout = (page) =>
   const n = await rafPerSecond(page);
   ok('reduced-motion: sem loop', n === 0, `${n}`);
   ok('reduced-motion: logo visível', await page.locator('.hero__logo').isVisible());
+  ok(
+    'reduced-motion: fotos sem efeito de surgimento (visíveis direto, sem partículas)',
+    await page.evaluate(() => !document.documentElement.classList.contains('img-fx') && !document.querySelector('.img-fx__canvas') && [...document.querySelectorAll('main picture > img')].every((i) => getComputedStyle(i).opacity === '1')),
+  );
   ok('reduced-motion: conteúdo revelado sem animação', await page.evaluate(() => getComputedStyle(document.querySelector('.structure__copy')).opacity === '1'));
   ok(
     'reduced-motion: convite, frases do carrossel e encerramento no estado final',
@@ -366,6 +422,7 @@ const finalLayout = (page) =>
   ok('sem JS: logo e CTA do hero visíveis', (await page.locator('.hero__logo').isVisible()) && (await page.locator('.hero__cta').isVisible()));
   ok('sem JS: seções visíveis (sem depender de reveal)', await page.evaluate(() => getComputedStyle(document.querySelector('.structure__copy')).opacity === '1'));
   ok('sem JS: horários na página', (await page.textContent('#localizacao')).includes('5h30 às 22h'));
+  ok('sem JS: todas as fotos visíveis', await page.evaluate(() => [...document.querySelectorAll('main picture > img')].every((i) => getComputedStyle(i).opacity === '1')));
   ok(
     'sem JS: título do convite, frases do carrossel e encerramento visíveis',
     await page.evaluate(() => [...document.querySelectorAll('.invite__word, .carousel__phrase, .final__step')].every((el) => getComputedStyle(el).opacity === '1')),

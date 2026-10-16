@@ -108,6 +108,15 @@ A primeira tela mostra a logo real da RIP, grande e inteira, com o arco de peque
 
 `scripts/verify-dist.mjs` falha o build se algum resto da Ribbon Glow ou do botão de pausa voltar a ser publicado.
 
+## Surgimento das fotos
+
+Cada foto, na primeira vez que entra na tela, aparece com fade-in enquanto uma faixa de quadradinhos vermelhos sobe por ela e se desfaz até a foto ficar inteira (`src/scripts/image-reveal.ts`, cerca de 1,3 s). As partículas usam as cores do arco do hero (`#F91700` e `#AC2B2B`) e a mesma grade, com o menor lado ÷ 40 e quadrados de 7 a 16 px.
+
+- As partículas ficam num canvas 2D temporário sobre a foto, removido no fim; a foto não é recortada, ampliada nem alterada.
+- Não há efeito com movimento reduzido nem sem JavaScript.
+- Fotos já visíveis quando a página abre ficam como estão, para não piscar. No desktop, isso vale para a fachada do hero.
+- No carrossel, cada slide surge quando aparece.
+
 ## Carrossel da estrutura
 
 As duas fotos da estrutura ficam num carrossel horizontal (`src/components/StructureSection.astro`), na ordem: vista geral (“Estrutura pensada para o seu melhor desempenho.”) e escada (“O espaço ideal para a sua evolução.”).
@@ -170,6 +179,18 @@ Ambiente: container Linux, Node 22, Chromium headless do Playwright com WebGL **
 | Desempenho (`npm run test:perf`, 1440 × 900, 3 amostras) | arco animado: 30 desenhos/s, quadros p50 17–33 ms e p95 33–50 ms, clique → pintura 32–34 ms; arco parado (movimento reduzido): 0 desenhos/s, quadros 16,7 ms, clique → pintura 5–10 ms; LCP 168–200 ms e CLS ≤ 0,005 nos dois casos |
 
 Os rAF/s e os tempos de quadro acima são do Chromium headless com WebGL **por software**: o arco é desenhado na CPU e o custo aparece exagerado. O desempenho em GPU e em aparelhos reais não foi medido.
+
+### Surgimento das fotos com partículas
+
+Mesmo ambiente da segunda rodada.
+
+- **`npm run test:e2e`: 76/76**, com 12 verificações novas em 1440 e 390 px:
+  - fotos fora da tela marcadas para surgir, e as já visíveis sem piscar;
+  - durante o surgimento, partículas sobre a foto e foto em fade;
+  - ao fim, foto inteira e canvas removido;
+  - no carrossel, a segunda foto surge quando o slide aparece;
+  - sem efeito com movimento reduzido, e fotos visíveis sem JavaScript.
+- **Larguras 360, 390, 768 e 1440 px:** rolando a página inteira, as 10 fotos terminam visíveis, sem partículas sobrando, sem rolagem horizontal nem erros.
 
 ### Primeira rodada de edições (ajustes 1–7)
 
