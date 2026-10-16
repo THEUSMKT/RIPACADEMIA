@@ -7,7 +7,8 @@
  * a foto, removido no fim; a foto em si não é recortada, ampliada nem alterada.
  *
  * Não há efeito (as fotos aparecem normalmente) com movimento reduzido, sem IntersectionObserver, sem
- * JavaScript ou para fotos que já estão na tela quando a página abre (para não piscarem).
+ * JavaScript, para fotos que já estão na tela quando a página abre (para não piscarem) e para as fotos
+ * marcadas com data-img-fx-off (artes de benefícios, CrossTraining, Free Pass, convite e encerramento).
  */
 
 const DURATION = 1300;
@@ -95,7 +96,7 @@ export function initImageReveal() {
   const vh = window.innerHeight;
   const targets = Array.from(document.querySelectorAll<HTMLImageElement>('main picture > img')).flatMap((img) => {
     const host = img.parentElement?.parentElement;
-    if (!host) return [];
+    if (!host || host.hasAttribute('data-img-fx-off')) return [];
     const r = host.getBoundingClientRect();
     // Já visível ao abrir a página: fica como está, sem esconder e reaparecer.
     if (r.top < vh && r.bottom > 0 && r.left < vw && r.right > 0) return [];

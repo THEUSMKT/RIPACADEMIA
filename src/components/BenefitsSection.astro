@@ -28,7 +28,7 @@ const artAlt = (name: string) =>
         benefits.map((b) => (
           <li class="benefit" data-reveal>
             <h3 class="sr-only">{b.name}</h3>
-            <div class="frame frame--fit benefit__art" style={ratioVar(b.art)}>
+            <div class="frame frame--fit benefit__art" style={ratioVar(b.art)} data-img-fx-off>
               <Photo id={b.art} alt={artAlt(b.name)} sizes="(min-width: 1024px) 480px, (min-width: 768px) 44vw, 92vw" />
             </div>
             <WhatsAppLink intent={b.id} placement="beneficios" ctaId={`beneficio_${b.id}`} variant="ghost" icon="arrow">

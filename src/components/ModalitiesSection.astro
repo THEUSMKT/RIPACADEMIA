@@ -5,7 +5,7 @@ import { ratioVar } from '../lib/images';
 import Photo from './Photo.astro';
 import WhatsAppLink from './WhatsAppLink.astro';
 
-const modalities: { id: string; title: string; text: string; cta: string; intent: Intent; photo: PhotoId; caption: string }[] = [
+const modalities: { id: string; title: string; text: string; cta: string; intent: Intent; photo: PhotoId; caption: string; imgFx?: boolean }[] = [
   {
     id: 'musculacao',
     title: 'Musculação',
@@ -22,6 +22,7 @@ const modalities: { id: string; title: string; text: string; cta: string; intent
     cta: 'Saber sobre o CrossTraining',
     intent: 'cross_training',
     photo: 'crosstraining',
+    imgFx: false, // sem o efeito de surgimento com partículas
     caption: 'Exercícios no chão com bola medicinal e peso',
   },
 ];
@@ -44,7 +45,7 @@ const moments: { intent: Intent; title: string; text: string }[] = [
       {
         modalities.map((m, i) => (
           <article class={`modality ${i % 2 ? 'modality--offset' : ''}`} id={m.id} data-reveal>
-            <div class="frame frame--fit modality__frame" style={ratioVar(m.photo)}>
+            <div class="frame frame--fit modality__frame" style={ratioVar(m.photo)} data-img-fx-off={m.imgFx === false ? '' : undefined}>
               <Photo id={m.photo} sizes="(min-width: 1024px) 480px, (min-width: 768px) 46vw, 92vw" />
             </div>
             <div class="modality__body">
